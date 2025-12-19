@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Northwind BI Dashboard - Dual Source ETL</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            color: #fff;
+        }
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 20px 40px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            background: linear-gradient(90deg, #00d4ff, #7b2cbf);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .header p {
+            color: #a0a0a0;
+            margin-top: 5px;
+            font-size: 0.95rem;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        .section-title {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            padding-left: 15px;
+            border-left: 4px solid #00d4ff;
+            color: #fff;
+        }
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(0, 212, 255, 0.5);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+        .card-icon.blue { background: linear-gradient(135deg, #00d4ff, #0099cc); }
+        .card-icon.purple { background: linear-gradient(135deg, #7b2cbf, #5a189a); }
+        .card-icon.green { background: linear-gradient(135deg, #00b894, #00a085); }
+        .card-icon.orange { background: linear-gradient(135deg, #f39c12, #e67e22); }
+        .card-icon.red { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+        .card-icon.pink { background: linear-gradient(135deg, #fd79a8, #e84393); }
+        .card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        .card p {
+            color: #a0a0a0;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        .card-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            margin-top: 12px;
+            background: rgba(0, 212, 255, 0.2);
+            color: #00d4ff;
+        }
+        .card-badge.kpi {
+            background: rgba(231, 76, 60, 0.2);
+            color: #e74c3c;
+        }
+        .full-dashboard {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(123, 44, 191, 0.1));
+            border: 2px solid rgba(0, 212, 255, 0.3);
+        }
+        .full-dashboard:hover {
+            border-color: #00d4ff;
+        }
+        .sources-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .source-box {
+            text-align: center;
+            padding: 20px;
+        }
+        .source-box h4 {
+            font-size: 1rem;
+            margin-bottom: 10px;
+            color: #00d4ff;
+        }
+        .source-box .value {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+        .source-box .label {
+            color: #a0a0a0;
+            font-size: 0.85rem;
+        }
+        .footer {
+            text-align: center;
+            padding: 30px;
+            color: #666;
+            font-size: 0.85rem;
+        }
+        .footer a {
+            color: #00d4ff;
+            text-decoration: none;
+        }
+        @media (max-width: 768px) {
+            .header h1 { font-size: 1.5rem; }
+            .cards-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>📊 Northwind BI Dashboard</h1>
+        <p>ETL Dual Source: SQL Server + Microsoft Access → Data Warehouse Unifié</p>
+    </header>
+
+    <div class="container">
+        <h2 class="section-title">🎯 Vue Complète</h2>
+        <div class="cards-grid">
+            <a href="dashboard_complet.html" class="card full-dashboard">
+                <div class="card-icon blue">📈</div>
+                <h3>Dashboard Complet</h3>
+                <p>Vue d'ensemble avec tous les graphiques et KPIs sur une seule page.</p>
+                <span class="card-badge">Recommandé</span>
+            </a>
+        </div>
+
+        <h2 class="section-title">📋 Indicateurs Clés (KPIs)</h2>
+        <div class="cards-grid">
+            <a href="kpis.html" class="card">
+                <div class="card-icon green">💰</div>
+                <h3>KPIs Principaux</h3>
+                <p>Chiffre d'affaires, commandes, panier moyen, clients actifs.</p>
+                <span class="card-badge">8 KPIs</span>
+            </a>
+            <a href="high_freight.html" class="card">
+                <div class="card-icon orange">🚚</div>
+                <h3>Freight > 500$</h3>
+                <p>Commandes avec frais de livraison élevés.</p>
+                <span class="card-badge kpi">KPI Requis</span>
+            </a>
+            <a href="late_deliveries.html" class="card">
+                <div class="card-icon red">⏰</div>
+                <h3>Livraisons en Retard</h3>
+                <p>Commandes livrées après la date requise.</p>
+                <span class="card-badge kpi">KPI Requis</span>
+            </a>
+        </div>
+
+        <h2 class="section-title">📊 Analyses Détaillées</h2>
+        <div class="cards-grid">
+            <a href="sales_trend.html" class="card">
+                <div class="card-icon blue">📈</div>
+                <h3>Tendance des Ventes</h3>
+                <p>Évolution du chiffre d'affaires par mois.</p>
+            </a>
+            <a href="categories.html" class="card">
+                <div class="card-icon purple">🏷️</div>
+                <h3>Ventes par Catégorie</h3>
+                <p>Répartition des ventes par catégorie de produits.</p>
+            </a>
+            <a href="countries.html" class="card">
+                <div class="card-icon green">🌍</div>
+                <h3>Ventes par Pays</h3>
+                <p>Top pays par chiffre d'affaires.</p>
+            </a>
+            <a href="world_map.html" class="card">
+                <div class="card-icon blue">🗺️</div>
+                <h3>Carte Mondiale</h3>
+                <p>Visualisation cartographique des ventes.</p>
+            </a>
+            <a href="top_products.html" class="card">
+                <div class="card-icon pink">⭐</div>
+                <h3>Top Produits</h3>
+                <p>Classement des 20 meilleurs produits.</p>
+            </a>
+        </div>
+
+        <h2 class="section-title">🔄 Sources de Données</h2>
+        <div class="cards-grid">
+            <a href="data_sources.html" class="card">
+                <div class="card-icon purple">🔗</div>
+                <h3>Répartition des Sources</h3>
+                <p>SQL Server vs Microsoft Access - contribution de chaque source.</p>
+                <span class="card-badge">Dual Source ETL</span>
+            </a>
+        </div>
+
+        <div class="sources-info">
+            <div class="source-box">
+                <h4>🗄️ SQL Server</h4>
+                <div class="value">2,155</div>
+                <div class="label">Enregistrements</div>
+            </div>
+            <div class="source-box">
+                <h4>📁 Microsoft Access</h4>
+                <div class="value">58</div>
+                <div class="label">Enregistrements</div>
+            </div>
+            <div class="source-box">
+                <h4>📊 Total Fusionné</h4>
+                <div class="value">2,213</div>
+                <div class="label">Enregistrements</div>
+            </div>
+            <div class="source-box">
+                <h4>💰 Chiffre d'Affaires</h4>
+                <div class="value">$1.33M</div>
+                <div class="label">Revenue Total</div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

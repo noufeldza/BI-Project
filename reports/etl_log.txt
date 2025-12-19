@@ -1,0 +1,1590 @@
+2025-12-19 17:13:49,534 - INFO - ======================================================================
+2025-12-19 17:13:49,534 - INFO - NORTHWIND ETL - DUAL HETEROGENEOUS SOURCE EXTRACTION
+2025-12-19 17:13:49,535 - INFO - ======================================================================
+2025-12-19 17:13:49,535 - INFO - Sources: SQL Server Northwind + Microsoft Access Northwind
+2025-12-19 17:13:49,535 - INFO - Output: Unified Star Schema Data Warehouse
+2025-12-19 17:13:49,535 - INFO - 
+ETL Started: 2025-12-19 17:13:49.535465
+2025-12-19 17:13:49,535 - INFO - 
+==================================================
+2025-12-19 17:13:49,535 - INFO - PHASE 1A: EXTRACTION FROM SQL SERVER
+2025-12-19 17:13:49,535 - INFO - ==================================================
+2025-12-19 17:13:49,739 - INFO - ✓ Connected to SQL Server Northwind database
+2025-12-19 17:13:50,229 - INFO -   SQL Server - Extracted 91 rows from Customers
+2025-12-19 17:13:50,244 - INFO -   SQL Server - Extracted 77 rows from Products
+2025-12-19 17:13:50,259 - INFO -   SQL Server - Extracted 9 rows from Employees
+2025-12-19 17:13:50,281 - INFO -   SQL Server - Extracted 830 rows from Orders
+2025-12-19 17:13:50,299 - INFO -   SQL Server - Extracted 2155 rows from Order Details
+2025-12-19 17:13:50,306 - INFO -   SQL Server - Extracted 8 rows from Categories
+2025-12-19 17:13:50,310 - INFO -   SQL Server - Extracted 29 rows from Suppliers
+2025-12-19 17:13:50,314 - INFO -   SQL Server - Extracted 3 rows from Shippers
+2025-12-19 17:13:50,320 - INFO -   SQL Server - Extracted 53 rows from Territories
+2025-12-19 17:13:50,324 - INFO -   SQL Server - Extracted 4 rows from Region
+2025-12-19 17:13:50,325 - INFO - SQL Server connection closed
+2025-12-19 17:13:50,325 - INFO - 
+==================================================
+2025-12-19 17:13:50,325 - INFO - PHASE 1B: EXTRACTION FROM MICROSOFT ACCESS
+2025-12-19 17:13:50,325 - INFO - ==================================================
+2025-12-19 17:13:50,956 - INFO - ✓ Connected to Access Northwind 2012 database: C:\Users\noufe\Downloads\Northwind 2012.accdb
+2025-12-19 17:13:50,994 - INFO -   Access - Extracted 29 rows from Customers
+2025-12-19 17:13:51,014 - INFO -   Access - Extracted 45 rows from Products
+2025-12-19 17:13:51,020 - INFO -   Access - Extracted 9 rows from Employees
+2025-12-19 17:13:51,028 - INFO -   Access - Extracted 48 rows from Orders
+2025-12-19 17:13:51,032 - INFO -   Access - Extracted 58 rows from Order Details
+2025-12-19 17:13:51,032 - WARNING -   Access - No mapping for Categories, skipping
+2025-12-19 17:13:51,038 - INFO -   Access - Extracted 10 rows from Suppliers
+2025-12-19 17:13:51,044 - INFO -   Access - Extracted 3 rows from Shippers
+2025-12-19 17:13:51,044 - WARNING -   Access - No mapping for Territories, skipping
+2025-12-19 17:13:51,044 - WARNING -   Access - No mapping for Region, skipping
+2025-12-19 17:13:51,180 - INFO - Access connection closed
+2025-12-19 17:13:51,181 - INFO - 
+==================================================
+2025-12-19 17:13:51,181 - INFO - PHASE 2: TRANSFORM & MERGE (Dual Sources)
+2025-12-19 17:13:51,181 - INFO - ==================================================
+2025-12-19 17:13:51,181 - INFO - 
+Source Statistics Before Merge:
+2025-12-19 17:13:51,181 - INFO -   SQL Server tables: 10
+2025-12-19 17:13:51,181 - INFO -   Access tables: 7
+2025-12-19 17:13:51,181 - INFO - 
+Merging Customers...
+2025-12-19 17:13:51,185 - INFO -   Customers: SQL Server=91 | Access unique=29 | Common keys=0 | Total=120
+2025-12-19 17:13:51,186 - INFO - 
+Merging Products (SQL Server pricing takes precedence)...
+2025-12-19 17:13:51,189 - INFO -   Average price difference: $0.00 (SQL Server prices used)
+2025-12-19 17:13:51,191 - INFO -   Products: SQL Server=77 | Access unique=19 | Common keys=26 | Total=96
+2025-12-19 17:13:51,191 - INFO - 
+Merging Employees...
+2025-12-19 17:13:51,194 - INFO -   Employees: SQL Server=9 | Access unique=0 | Common keys=9 | Total=9
+2025-12-19 17:13:51,194 - INFO - 
+Merging Orders (deduplicating transactions)...
+2025-12-19 17:13:51,197 - INFO -   Orders: SQL Server=830 | Access unique=48 | Common keys=0 | Total=878
+2025-12-19 17:13:51,198 - INFO - 
+Merging Order Details (split by OrderID to match Orders)...
+2025-12-19 17:13:51,202 - INFO -   Order Details: SQL Server=2155 (97%) | Access=58 (2%) | Merged=2213
+2025-12-19 17:13:51,202 - INFO - 
+Merging Categories...
+2025-12-19 17:13:51,203 - INFO -   Categories: Only SQL Server data available (8 rows)
+2025-12-19 17:13:51,203 - INFO - 
+Merging Suppliers...
+2025-12-19 17:13:51,205 - INFO -   Suppliers: SQL Server=29 | Access unique=0 | Common keys=10 | Total=29
+2025-12-19 17:13:51,205 - INFO - 
+Merging Shippers...
+2025-12-19 17:13:51,207 - INFO -   Shippers: SQL Server=3 | Access unique=0 | Common keys=3 | Total=3
+2025-12-19 17:13:51,207 - INFO - 
+--------------------------------------------------
+2025-12-19 17:13:51,207 - INFO - Creating Star Schema (Data Warehouse Model)
+2025-12-19 17:13:51,207 - INFO - --------------------------------------------------
+2025-12-19 17:13:51,207 - INFO - 
+Creating Dim_Time...
+2025-12-19 17:13:51,218 - INFO -   ✓ Dim_Time: 536 unique dates
+2025-12-19 17:13:51,218 - INFO - 
+Creating Dim_Customers...
+2025-12-19 17:13:51,220 - INFO -   ✓ Dim_Customers: 120 customers
+2025-12-19 17:13:51,220 - INFO - 
+Creating Dim_Products...
+2025-12-19 17:13:51,223 - INFO -   ✓ Dim_Products: 96 products
+2025-12-19 17:13:51,223 - INFO - 
+Creating Dim_Employees...
+2025-12-19 17:13:51,224 - INFO -   ✓ Dim_Employees: 9 employees
+2025-12-19 17:13:51,224 - INFO - 
+Creating Fact_Sales...
+2025-12-19 17:13:51,238 - INFO -   ✓ Fact_Sales: 2213 transaction rows
+2025-12-19 17:13:51,239 - INFO -     Total Sales: $1,333,929.86
+2025-12-19 17:13:51,239 - INFO -     Average Order Value: $1,533.25
+2025-12-19 17:13:51,239 - INFO - 
+✓ Transform and merge completed
+2025-12-19 17:13:51,240 - INFO - 
+==================================================
+2025-12-19 17:13:51,240 - INFO - PHASE 3A: LOAD TO CSV FILES
+2025-12-19 17:13:51,240 - INFO - ==================================================
+2025-12-19 17:13:51,245 - INFO -   ✓ Saved Dim_Time.csv (536 rows)
+2025-12-19 17:13:51,248 - INFO -   ✓ Saved Dim_Customers.csv (120 rows)
+2025-12-19 17:13:51,249 - INFO -   ✓ Saved Dim_Products.csv (96 rows)
+2025-12-19 17:13:51,261 - INFO -   ✓ Saved Dim_Employees.csv (9 rows)
+2025-12-19 17:13:51,288 - INFO -   ✓ Saved Fact_Sales.csv (2213 rows)
+2025-12-19 17:13:51,288 - INFO - 
+Creating analysis views for dashboard...
+2025-12-19 17:13:51,296 - INFO -   ✓ Sales_By_Month.csv
+2025-12-19 17:13:51,301 - INFO -   ✓ Sales_By_Category.csv
+2025-12-19 17:13:51,305 - INFO -   ✓ Sales_By_Country.csv
+2025-12-19 17:13:51,309 - INFO -   ✓ Top_Products.csv
+2025-12-19 17:13:51,312 - INFO -   ✓ High_Freight_Orders.csv (13 orders)
+2025-12-19 17:13:51,316 - INFO -   ✓ Late_Deliveries.csv (37 orders)
+2025-12-19 17:13:51,316 - INFO - 
+==================================================
+2025-12-19 17:13:51,316 - INFO - PHASE 3B: LOAD TO DATA WAREHOUSE (SQLite)
+2025-12-19 17:13:51,317 - INFO - ==================================================
+2025-12-19 17:13:51,327 - INFO -   ✓ Loaded Dim_Time to DWH (536 rows)
+2025-12-19 17:13:51,334 - INFO -   ✓ Loaded Dim_Customers to DWH (120 rows)
+2025-12-19 17:13:51,341 - INFO -   ✓ Loaded Dim_Products to DWH (96 rows)
+2025-12-19 17:13:51,350 - INFO -   ✓ Loaded Dim_Employees to DWH (9 rows)
+2025-12-19 17:13:51,374 - INFO -   ✓ Loaded Fact_Sales to DWH (2213 rows)
+2025-12-19 17:13:51,375 - INFO - 
+✓ Data Warehouse saved: c:\Users\noufe\Desktop\BI Project\data\DWH_Northwind.db
+2025-12-19 17:13:51,375 - INFO - 
+======================================================================
+2025-12-19 17:13:51,375 - INFO - ETL COMPLETED SUCCESSFULLY
+2025-12-19 17:13:51,375 - INFO - ======================================================================
+2025-12-19 17:13:51,376 - INFO - Duration: 0:00:01.840156
+2025-12-19 17:13:51,376 - INFO - 
+--------------------------------------------------
+2025-12-19 17:13:51,376 - INFO - ETL SUMMARY
+2025-12-19 17:13:51,376 - INFO - --------------------------------------------------
+2025-12-19 17:13:51,376 - INFO - 
+📥 DATA SOURCES:
+2025-12-19 17:13:51,376 - INFO -   Source 1 (SQL Server): Connected
+2025-12-19 17:13:51,376 - INFO -     Tables extracted: ['Customers', 'Products', 'Employees', 'Orders', 'Order Details', 'Categories', 'Suppliers', 'Shippers', 'Territories', 'Region']
+2025-12-19 17:13:51,376 - INFO -   Source 2 (Access): Connected
+2025-12-19 17:13:51,377 - INFO -     Tables extracted: ['Customers', 'Products', 'Employees', 'Orders', 'Order Details', 'Suppliers', 'Shippers']
+2025-12-19 17:13:51,377 - INFO - 
+🔄 MERGED DATA:
+2025-12-19 17:13:51,377 - INFO -   Customers: 120 rows
+2025-12-19 17:13:51,377 - INFO -   Products: 96 rows
+2025-12-19 17:13:51,377 - INFO -   Employees: 9 rows
+2025-12-19 17:13:51,377 - INFO -   Orders: 878 rows
+2025-12-19 17:13:51,377 - INFO -   Order Details: 2213 rows
+2025-12-19 17:13:51,377 - INFO -   Categories: 8 rows
+2025-12-19 17:13:51,377 - INFO -   Suppliers: 29 rows
+2025-12-19 17:13:51,378 - INFO -   Shippers: 3 rows
+2025-12-19 17:13:51,378 - INFO - 
+⭐ STAR SCHEMA (Data Warehouse):
+2025-12-19 17:13:51,378 - INFO -   Dim_Time: 536 dates
+2025-12-19 17:13:51,378 - INFO -   Dim_Customers: 120 customers
+2025-12-19 17:13:51,378 - INFO -   Dim_Products: 96 products
+2025-12-19 17:13:51,378 - INFO -   Dim_Employees: 9 employees
+2025-12-19 17:13:51,378 - INFO -   Fact_Sales: 2213 transactions
+2025-12-19 17:13:51,378 - INFO -     Total Revenue: $1,333,929.86
+2025-12-19 17:13:51,379 - INFO - 
+📁 OUTPUT LOCATION: c:\Users\noufe\Desktop\BI Project\data
+2025-12-19 17:13:51,379 - INFO - 🗄️ DWH DATABASE: c:\Users\noufe\Desktop\BI Project\data\DWH_Northwind.db
+2025-12-19 23:27:19,217 - INFO - ======================================================================
+2025-12-19 23:27:19,217 - INFO - NORTHWIND ETL - DUAL HETEROGENEOUS SOURCE EXTRACTION
+2025-12-19 23:27:19,217 - INFO - ======================================================================
+2025-12-19 23:27:19,218 - INFO - Sources: SQL Server Northwind + Microsoft Access Northwind
+2025-12-19 23:27:19,218 - INFO - Output: Unified Star Schema Data Warehouse
+2025-12-19 23:27:19,218 - INFO - 
+ETL Started: 2025-12-19 23:27:19.218225
+2025-12-19 23:27:19,218 - INFO - 
+==================================================
+2025-12-19 23:27:19,218 - INFO - PHASE 1A: EXTRACTION FROM SQL SERVER
+2025-12-19 23:27:19,218 - INFO - ==================================================
+2025-12-19 23:27:19,304 - INFO - ✓ Connected to SQL Server Northwind database
+2025-12-19 23:27:19,742 - INFO -   SQL Server - Extracted 91 rows from Customers
+2025-12-19 23:27:19,748 - INFO -   SQL Server - Extracted 77 rows from Products
+2025-12-19 23:27:19,757 - INFO -   SQL Server - Extracted 9 rows from Employees
+2025-12-19 23:27:19,768 - INFO -   SQL Server - Extracted 830 rows from Orders
+2025-12-19 23:27:19,780 - INFO -   SQL Server - Extracted 2155 rows from Order Details
+2025-12-19 23:27:19,784 - INFO -   SQL Server - Extracted 8 rows from Categories
+2025-12-19 23:27:19,788 - INFO -   SQL Server - Extracted 29 rows from Suppliers
+2025-12-19 23:27:19,790 - INFO -   SQL Server - Extracted 3 rows from Shippers
+2025-12-19 23:27:19,793 - INFO -   SQL Server - Extracted 53 rows from Territories
+2025-12-19 23:27:19,795 - INFO -   SQL Server - Extracted 4 rows from Region
+2025-12-19 23:27:19,796 - INFO - SQL Server connection closed
+2025-12-19 23:27:19,796 - INFO - 
+==================================================
+2025-12-19 23:27:19,797 - INFO - PHASE 1B: EXTRACTION FROM MICROSOFT ACCESS
+2025-12-19 23:27:19,797 - INFO - ==================================================
+2025-12-19 23:27:20,085 - INFO - ✓ Connected to Access Northwind 2012 database: C:\Users\noufe\Downloads\Northwind 2012.accdb
+2025-12-19 23:27:20,108 - INFO -   Access - Extracted 29 rows from Customers
+2025-12-19 23:27:20,125 - INFO -   Access - Extracted 45 rows from Products
+2025-12-19 23:27:20,130 - INFO -   Access - Extracted 9 rows from Employees
+2025-12-19 23:27:20,136 - INFO -   Access - Extracted 48 rows from Orders
+2025-12-19 23:27:20,140 - INFO -   Access - Extracted 58 rows from Order Details
+2025-12-19 23:27:20,140 - WARNING -   Access - No mapping for Categories, skipping
+2025-12-19 23:27:20,145 - INFO -   Access - Extracted 10 rows from Suppliers
+2025-12-19 23:27:20,149 - INFO -   Access - Extracted 3 rows from Shippers
+2025-12-19 23:27:20,149 - WARNING -   Access - No mapping for Territories, skipping
+2025-12-19 23:27:20,150 - WARNING -   Access - No mapping for Region, skipping
+2025-12-19 23:27:20,377 - INFO - Access connection closed
+2025-12-19 23:27:20,378 - INFO - 
+==================================================
+2025-12-19 23:27:20,378 - INFO - PHASE 2: TRANSFORM & MERGE (Dual Sources)
+2025-12-19 23:27:20,378 - INFO - ==================================================
+2025-12-19 23:27:20,378 - INFO - 
+Source Statistics Before Merge:
+2025-12-19 23:27:20,378 - INFO -   SQL Server tables: 10
+2025-12-19 23:27:20,378 - INFO -   Access tables: 7
+2025-12-19 23:27:20,378 - INFO - 
+Merging Customers...
+2025-12-19 23:27:20,383 - INFO -   Customers: SQL Server=91 | Access unique=29 | Common keys=0 | Total=120
+2025-12-19 23:27:20,383 - INFO - 
+Merging Products (SQL Server pricing takes precedence)...
+2025-12-19 23:27:20,386 - INFO -   Average price difference: $0.00 (SQL Server prices used)
+2025-12-19 23:27:20,388 - INFO -   Products: SQL Server=77 | Access unique=19 | Common keys=26 | Total=96
+2025-12-19 23:27:20,388 - INFO - 
+Merging Employees...
+2025-12-19 23:27:20,391 - INFO -   Employees: SQL Server=9 | Access unique=0 | Common keys=9 | Total=9
+2025-12-19 23:27:20,391 - INFO - 
+Merging Orders (deduplicating transactions)...
+2025-12-19 23:27:20,394 - INFO -   Orders: SQL Server=830 | Access unique=48 | Common keys=0 | Total=878
+2025-12-19 23:27:20,395 - INFO - 
+Merging Order Details (split by OrderID to match Orders)...
+2025-12-19 23:27:20,399 - INFO -   Order Details: SQL Server=2155 (97%) | Access=58 (2%) | Merged=2213
+2025-12-19 23:27:20,400 - INFO - 
+Merging Categories...
+2025-12-19 23:27:20,400 - INFO -   Categories: Only SQL Server data available (8 rows)
+2025-12-19 23:27:20,400 - INFO - 
+Merging Suppliers...
+2025-12-19 23:27:20,403 - INFO -   Suppliers: SQL Server=29 | Access unique=0 | Common keys=10 | Total=29
+2025-12-19 23:27:20,403 - INFO - 
+Merging Shippers...
+2025-12-19 23:27:20,405 - INFO -   Shippers: SQL Server=3 | Access unique=0 | Common keys=3 | Total=3
+2025-12-19 23:27:20,405 - INFO - 
+--------------------------------------------------
+2025-12-19 23:27:20,405 - INFO - Creating Star Schema (Data Warehouse Model)
+2025-12-19 23:27:20,405 - INFO - --------------------------------------------------
+2025-12-19 23:27:20,406 - INFO - 
+Creating Dim_Time...
+2025-12-19 23:27:20,418 - INFO -   ✓ Dim_Time: 536 unique dates
+2025-12-19 23:27:20,419 - INFO - 
+Creating Dim_Customers...
+2025-12-19 23:27:20,420 - INFO -   ✓ Dim_Customers: 120 customers
+2025-12-19 23:27:20,420 - INFO - 
+Creating Dim_Products...
+2025-12-19 23:27:20,424 - INFO -   ✓ Dim_Products: 96 products
+2025-12-19 23:27:20,424 - INFO - 
+Creating Dim_Employees...
+2025-12-19 23:27:20,426 - INFO -   ✓ Dim_Employees: 9 employees
+2025-12-19 23:27:20,426 - INFO - 
+Creating Fact_Sales...
+2025-12-19 23:27:20,443 - INFO -   ✓ Fact_Sales: 2213 transaction rows
+2025-12-19 23:27:20,445 - INFO -     Total Sales: $1,333,929.86
+2025-12-19 23:27:20,445 - INFO -     Average Order Value: $1,533.25
+2025-12-19 23:27:20,446 - INFO - 
+✓ Transform and merge completed
+2025-12-19 23:27:20,446 - INFO - 
+==================================================
+2025-12-19 23:27:20,446 - INFO - PHASE 3A: LOAD TO CSV FILES
+2025-12-19 23:27:20,446 - INFO - ==================================================
+2025-12-19 23:27:20,452 - INFO -   ✓ Saved Dim_Time.csv (536 rows)
+2025-12-19 23:27:20,454 - INFO -   ✓ Saved Dim_Customers.csv (120 rows)
+2025-12-19 23:27:20,456 - INFO -   ✓ Saved Dim_Products.csv (96 rows)
+2025-12-19 23:27:20,469 - INFO -   ✓ Saved Dim_Employees.csv (9 rows)
+2025-12-19 23:27:20,495 - INFO -   ✓ Saved Fact_Sales.csv (2213 rows)
+2025-12-19 23:27:20,495 - INFO - 
+Creating analysis views for dashboard...
+2025-12-19 23:27:20,503 - INFO -   ✓ Sales_By_Month.csv
+2025-12-19 23:27:20,509 - INFO -   ✓ Sales_By_Category.csv
+2025-12-19 23:27:20,513 - INFO -   ✓ Sales_By_Country.csv
+2025-12-19 23:27:20,517 - INFO -   ✓ Top_Products.csv
+2025-12-19 23:27:20,522 - INFO -   ✓ High_Freight_Orders.csv (13 orders)
+2025-12-19 23:27:20,525 - INFO -   ✓ Late_Deliveries.csv (37 orders)
+2025-12-19 23:27:20,525 - INFO - 
+==================================================
+2025-12-19 23:27:20,525 - INFO - PHASE 3B: LOAD TO DATA WAREHOUSE (SQLite)
+2025-12-19 23:27:20,525 - INFO - ==================================================
+2025-12-19 23:27:20,539 - INFO -   ✓ Loaded Dim_Time to DWH (536 rows)
+2025-12-19 23:27:20,547 - INFO -   ✓ Loaded Dim_Customers to DWH (120 rows)
+2025-12-19 23:27:20,554 - INFO -   ✓ Loaded Dim_Products to DWH (96 rows)
+2025-12-19 23:27:20,562 - INFO -   ✓ Loaded Dim_Employees to DWH (9 rows)
+2025-12-19 23:27:20,586 - INFO -   ✓ Loaded Fact_Sales to DWH (2213 rows)
+2025-12-19 23:27:20,586 - INFO - 
+✓ Data Warehouse saved: c:\Users\noufe\Desktop\BI Project\data\DWH_Northwind.db
+2025-12-19 23:27:20,586 - INFO - 
+======================================================================
+2025-12-19 23:27:20,587 - INFO - ETL COMPLETED SUCCESSFULLY
+2025-12-19 23:27:20,587 - INFO - ======================================================================
+2025-12-19 23:27:20,587 - INFO - Duration: 0:00:01.368690
+2025-12-19 23:27:20,587 - INFO - 
+--------------------------------------------------
+2025-12-19 23:27:20,587 - INFO - ETL SUMMARY
+2025-12-19 23:27:20,587 - INFO - --------------------------------------------------
+2025-12-19 23:27:20,587 - INFO - 
+📥 DATA SOURCES:
+2025-12-19 23:27:20,587 - INFO -   Source 1 (SQL Server): Connected
+2025-12-19 23:27:20,587 - INFO -     Tables extracted: ['Customers', 'Products', 'Employees', 'Orders', 'Order Details', 'Categories', 'Suppliers', 'Shippers', 'Territories', 'Region']
+2025-12-19 23:27:20,588 - INFO -   Source 2 (Access): Connected
+2025-12-19 23:27:20,588 - INFO -     Tables extracted: ['Customers', 'Products', 'Employees', 'Orders', 'Order Details', 'Suppliers', 'Shippers']
+2025-12-19 23:27:20,588 - INFO - 
+🔄 MERGED DATA:
+2025-12-19 23:27:20,588 - INFO -   Customers: 120 rows
+2025-12-19 23:27:20,588 - INFO -   Products: 96 rows
+2025-12-19 23:27:20,588 - INFO -   Employees: 9 rows
+2025-12-19 23:27:20,588 - INFO -   Orders: 878 rows
+2025-12-19 23:27:20,588 - INFO -   Order Details: 2213 rows
+2025-12-19 23:27:20,589 - INFO -   Categories: 8 rows
+2025-12-19 23:27:20,589 - INFO -   Suppliers: 29 rows
+2025-12-19 23:27:20,589 - INFO -   Shippers: 3 rows
+2025-12-19 23:27:20,589 - INFO - 
+⭐ STAR SCHEMA (Data Warehouse):
+2025-12-19 23:27:20,589 - INFO -   Dim_Time: 536 dates
+2025-12-19 23:27:20,589 - INFO -   Dim_Customers: 120 customers
+2025-12-19 23:27:20,589 - INFO -   Dim_Products: 96 products
+2025-12-19 23:27:20,589 - INFO -   Dim_Employees: 9 employees
+2025-12-19 23:27:20,589 - INFO -   Fact_Sales: 2213 transactions
+2025-12-19 23:27:20,590 - INFO -     Total Revenue: $1,333,929.86
+2025-12-19 23:27:20,590 - INFO - 
+📁 OUTPUT LOCATION: c:\Users\noufe\Desktop\BI Project\data
+2025-12-19 23:27:20,590 - INFO - 🗄️ DWH DATABASE: c:\Users\noufe\Desktop\BI Project\data\DWH_Northwind.db
+2025-12-19 23:30:33,075 - INFO - ======================================================================
+2025-12-19 23:30:33,075 - INFO - NORTHWIND ETL - DUAL HETEROGENEOUS SOURCE EXTRACTION
+2025-12-19 23:30:33,076 - INFO - ======================================================================
+2025-12-19 23:30:33,076 - INFO - Sources: SQL Server Northwind + Microsoft Access Northwind
+2025-12-19 23:30:33,076 - INFO - Output: Unified Star Schema Data Warehouse
+2025-12-19 23:30:33,076 - INFO - 
+ETL Started: 2025-12-19 23:30:33.076408
+2025-12-19 23:30:33,076 - INFO - 
+==================================================
+2025-12-19 23:30:33,076 - INFO - PHASE 1A: EXTRACTION FROM SQL SERVER
+2025-12-19 23:30:33,076 - INFO - ==================================================
+2025-12-19 23:30:33,126 - INFO - ✓ Connected to SQL Server Northwind database
+2025-12-19 23:30:33,329 - INFO -   SQL Server - Extracted 91 rows from Customers
+2025-12-19 23:30:33,333 - INFO -   SQL Server - Extracted 77 rows from Products
+2025-12-19 23:30:33,337 - INFO -   SQL Server - Extracted 9 rows from Employees
+2025-12-19 23:30:33,349 - INFO -   SQL Server - Extracted 830 rows from Orders
+2025-12-19 23:30:33,359 - INFO -   SQL Server - Extracted 2155 rows from Order Details
+2025-12-19 23:30:33,362 - INFO -   SQL Server - Extracted 8 rows from Categories
+2025-12-19 23:30:33,365 - INFO -   SQL Server - Extracted 29 rows from Suppliers
+2025-12-19 23:30:33,367 - INFO -   SQL Server - Extracted 3 rows from Shippers
+2025-12-19 23:30:33,369 - INFO -   SQL Server - Extracted 53 rows from Territories
+2025-12-19 23:30:33,370 - INFO -   SQL Server - Extracted 4 rows from Region
+2025-12-19 23:30:33,371 - INFO - SQL Server connection closed
+2025-12-19 23:30:33,371 - INFO - 
+==================================================
+2025-12-19 23:30:33,371 - INFO - PHASE 1B: EXTRACTION FROM MICROSOFT ACCESS
+2025-12-19 23:30:33,371 - INFO - ==================================================
+2025-12-19 23:30:33,602 - INFO - ✓ Connected to Access Northwind 2012 database: C:\Users\noufe\Downloads\Northwind 2012.accdb
+2025-12-19 23:30:33,617 - INFO -   Access - Extracted 29 rows from Customers
+2025-12-19 23:30:33,634 - INFO -   Access - Extracted 45 rows from Products
+2025-12-19 23:30:33,640 - INFO -   Access - Extracted 9 rows from Employees
+2025-12-19 23:30:33,646 - INFO -   Access - Extracted 48 rows from Orders
+2025-12-19 23:30:33,649 - INFO -   Access - Extracted 58 rows from Order Details
+2025-12-19 23:30:33,650 - WARNING -   Access - No mapping for Categories, skipping
+2025-12-19 23:30:33,656 - INFO -   Access - Extracted 10 rows from Suppliers
+2025-12-19 23:30:33,661 - INFO -   Access - Extracted 3 rows from Shippers
+2025-12-19 23:30:33,661 - WARNING -   Access - No mapping for Territories, skipping
+2025-12-19 23:30:33,662 - WARNING -   Access - No mapping for Region, skipping
+2025-12-19 23:30:33,984 - INFO - Access connection closed
+2025-12-19 23:30:33,984 - INFO - 
+==================================================
+2025-12-19 23:30:33,984 - INFO - PHASE 2: TRANSFORM & MERGE (Dual Sources)
+2025-12-19 23:30:33,985 - INFO - ==================================================
+2025-12-19 23:30:33,985 - INFO - 
+Source Statistics Before Merge:
+2025-12-19 23:30:33,985 - INFO -   SQL Server tables: 10
+2025-12-19 23:30:33,985 - INFO -   Access tables: 7
+2025-12-19 23:30:33,985 - INFO - 
+Merging Customers...
+2025-12-19 23:30:33,987 - INFO -   Customers: SQL Server=91 | Access unique=29 | Common keys=0 | Total=120
+2025-12-19 23:30:33,987 - INFO - 
+Merging Products (SQL Server pricing takes precedence)...
+2025-12-19 23:30:33,989 - INFO -   Average price difference: $0.00 (SQL Server prices used)
+2025-12-19 23:30:33,991 - INFO -   Products: SQL Server=77 | Access unique=19 | Common keys=26 | Total=96
+2025-12-19 23:30:33,991 - INFO - 
+Merging Employees...
+2025-12-19 23:30:33,994 - INFO -   Employees: SQL Server=9 | Access unique=0 | Common keys=9 | Total=9
+2025-12-19 23:30:33,994 - INFO - 
+Merging Orders (deduplicating transactions)...
+2025-12-19 23:30:33,997 - INFO -   Orders: SQL Server=830 | Access unique=48 | Common keys=0 | Total=878
+2025-12-19 23:30:33,997 - INFO - 
+Merging Order Details (split by OrderID to match Orders)...
+2025-12-19 23:30:34,001 - INFO -   Order Details: SQL Server=2155 (97%) | Access=58 (2%) | Merged=2213
+2025-12-19 23:30:34,002 - INFO - 
+Merging Categories...
+2025-12-19 23:30:34,002 - INFO -   Categories: Only SQL Server data available (8 rows)
+2025-12-19 23:30:34,003 - INFO - 
+Merging Suppliers...
+2025-12-19 23:30:34,004 - INFO -   Suppliers: SQL Server=29 | Access unique=0 | Common keys=10 | Total=29
+2025-12-19 23:30:34,005 - INFO - 
+Merging Shippers...
+2025-12-19 23:30:34,006 - INFO -   Shippers: SQL Server=3 | Access unique=0 | Common keys=3 | Total=3
+2025-12-19 23:30:34,006 - INFO - 
+--------------------------------------------------
+2025-12-19 23:30:34,006 - INFO - Creating Star Schema (Data Warehouse Model)
+2025-12-19 23:30:34,006 - INFO - --------------------------------------------------
+2025-12-19 23:30:34,006 - INFO - 
+Creating Dim_Time...
+2025-12-19 23:30:34,016 - INFO -   ✓ Dim_Time: 536 unique dates
+2025-12-19 23:30:34,017 - INFO - 
+Creating Dim_Customers...
+2025-12-19 23:30:34,018 - INFO -   ✓ Dim_Customers: 120 customers
+2025-12-19 23:30:34,018 - INFO - 
+Creating Dim_Products...
+2025-12-19 23:30:34,022 - INFO -   ✓ Dim_Products: 96 products
+2025-12-19 23:30:34,022 - INFO - 
+Creating Dim_Employees...
+2025-12-19 23:30:34,023 - INFO -   ✓ Dim_Employees: 9 employees
+2025-12-19 23:30:34,023 - INFO - 
+Creating Fact_Sales...
+2025-12-19 23:30:34,038 - INFO -   ✓ Fact_Sales: 2213 transaction rows
+2025-12-19 23:30:34,039 - INFO -     Total Sales: $1,333,929.86
+2025-12-19 23:30:34,039 - INFO -     Average Order Value: $1,533.25
+2025-12-19 23:30:34,039 - INFO - 
+✓ Transform and merge completed
+2025-12-19 23:30:34,040 - INFO - 
+==================================================
+2025-12-19 23:30:34,040 - INFO - PHASE 3A: LOAD TO CSV FILES
+2025-12-19 23:30:34,040 - INFO - ==================================================
+2025-12-19 23:30:34,045 - INFO -   ✓ Saved Dim_Time.csv (536 rows)
+2025-12-19 23:30:34,047 - INFO -   ✓ Saved Dim_Customers.csv (120 rows)
+2025-12-19 23:30:34,049 - INFO -   ✓ Saved Dim_Products.csv (96 rows)
+2025-12-19 23:30:34,061 - INFO -   ✓ Saved Dim_Employees.csv (9 rows)
+2025-12-19 23:30:34,086 - INFO -   ✓ Saved Fact_Sales.csv (2213 rows)
+2025-12-19 23:30:34,086 - INFO - 
+Creating analysis views for dashboard...
+2025-12-19 23:30:34,094 - INFO -   ✓ Sales_By_Month.csv
+2025-12-19 23:30:34,100 - INFO -   ✓ Sales_By_Category.csv
+2025-12-19 23:30:34,104 - INFO -   ✓ Sales_By_Country.csv
+2025-12-19 23:30:34,108 - INFO -   ✓ Top_Products.csv
+2025-12-19 23:30:34,112 - INFO -   ✓ High_Freight_Orders.csv (13 orders)
+2025-12-19 23:30:34,115 - INFO -   ✓ Late_Deliveries.csv (37 orders)
+2025-12-19 23:30:34,116 - INFO - 
+==================================================
+2025-12-19 23:30:34,116 - INFO - PHASE 3B: LOAD TO DATA WAREHOUSE (SQLite)
+2025-12-19 23:30:34,116 - INFO - ==================================================
+2025-12-19 23:30:34,127 - INFO -   ✓ Loaded Dim_Time to DWH (536 rows)
+2025-12-19 23:30:34,134 - INFO -   ✓ Loaded Dim_Customers to DWH (120 rows)
+2025-12-19 23:30:34,142 - INFO -   ✓ Loaded Dim_Products to DWH (96 rows)
+2025-12-19 23:30:34,153 - INFO -   ✓ Loaded Dim_Employees to DWH (9 rows)
+2025-12-19 23:30:34,187 - INFO -   ✓ Loaded Fact_Sales to DWH (2213 rows)
+2025-12-19 23:30:34,188 - INFO - 
+✓ Data Warehouse saved: c:\Users\noufe\Desktop\BI Project\data\DWH_Northwind.db
+2025-12-19 23:30:34,188 - INFO - 
+======================================================================
+2025-12-19 23:30:34,188 - INFO - ETL COMPLETED SUCCESSFULLY
+2025-12-19 23:30:34,188 - INFO - ======================================================================
+2025-12-19 23:30:34,188 - INFO - Duration: 0:00:01.112039
+2025-12-19 23:30:34,189 - INFO - 
+--------------------------------------------------
+2025-12-19 23:30:34,189 - INFO - ETL SUMMARY
+2025-12-19 23:30:34,189 - INFO - --------------------------------------------------
+2025-12-19 23:30:34,189 - INFO - 
+📥 DATA SOURCES:
+2025-12-19 23:30:34,189 - INFO -   Source 1 (SQL Server): Connected
+2025-12-19 23:30:34,189 - INFO -     Tables extracted: ['Customers', 'Products', 'Employees', 'Orders', 'Order Details', 'Categories', 'Suppliers', 'Shippers', 'Territories', 'Region']
+2025-12-19 23:30:34,190 - INFO -   Source 2 (Access): Connected
+2025-12-19 23:30:34,190 - INFO -     Tables extracted: ['Customers', 'Products', 'Employees', 'Orders', 'Order Details', 'Suppliers', 'Shippers']
+2025-12-19 23:30:34,190 - INFO - 
+🔄 MERGED DATA:
+2025-12-19 23:30:34,190 - INFO -   Customers: 120 rows
+2025-12-19 23:30:34,190 - INFO -   Products: 96 rows
+2025-12-19 23:30:34,190 - INFO -   Employees: 9 rows
+2025-12-19 23:30:34,191 - INFO -   Orders: 878 rows
+2025-12-19 23:30:34,191 - INFO -   Order Details: 2213 rows
+2025-12-19 23:30:34,191 - INFO -   Categories: 8 rows
+2025-12-19 23:30:34,191 - INFO -   Suppliers: 29 rows
+2025-12-19 23:30:34,191 - INFO -   Shippers: 3 rows
+2025-12-19 23:30:34,191 - INFO - 
+⭐ STAR SCHEMA (Data Warehouse):
+2025-12-19 23:30:34,191 - INFO -   Dim_Time: 536 dates
+2025-12-19 23:30:34,192 - INFO -   Dim_Customers: 120 customers
+2025-12-19 23:30:34,192 - INFO -   Dim_Products: 96 products
+2025-12-19 23:30:34,192 - INFO -   Dim_Employees: 9 employees
+2025-12-19 23:30:34,192 - INFO -   Fact_Sales: 2213 transactions
+2025-12-19 23:30:34,192 - INFO -     Total Revenue: $1,333,929.86
+2025-12-19 23:30:34,192 - INFO - 
+📁 OUTPUT LOCATION: c:\Users\noufe\Desktop\BI Project\data
+2025-12-19 23:30:34,193 - INFO - 🗄️ DWH DATABASE: c:\Users\noufe\Desktop\BI Project\data\DWH_Northwind.db
+2025-12-19 23:33:22,375 - INFO - ======================================================================
+2025-12-19 23:33:22,375 - INFO - NORTHWIND ETL - DUAL HETEROGENEOUS SOURCE EXTRACTION
+2025-12-19 23:33:22,375 - INFO - ======================================================================
+2025-12-19 23:33:22,375 - INFO - Sources: SQL Server Northwind + Microsoft Access Northwind
+2025-12-19 23:33:22,375 - INFO - Output: Unified Star Schema Data Warehouse
+2025-12-19 23:33:22,376 - INFO - 
+ETL Started: 2025-12-19 23:33:22.376217
+2025-12-19 23:33:22,376 - INFO - 
+==================================================
+2025-12-19 23:33:22,376 - INFO - PHASE 1A: EXTRACTION FROM SQL SERVER
+2025-12-19 23:33:22,376 - INFO - ==================================================
+2025-12-19 23:33:22,427 - INFO - ✓ Connected to SQL Server Northwind database
+2025-12-19 23:33:22,623 - INFO -   SQL Server - Extracted 91 rows from Customers
+2025-12-19 23:33:22,627 - INFO -   SQL Server - Extracted 77 rows from Products
+2025-12-19 23:33:22,631 - INFO -   SQL Server - Extracted 9 rows from Employees
+2025-12-19 23:33:22,642 - INFO -   SQL Server - Extracted 830 rows from Orders
+2025-12-19 23:33:22,654 - INFO -   SQL Server - Extracted 2155 rows from Order Details
+2025-12-19 23:33:22,656 - INFO -   SQL Server - Extracted 8 rows from Categories
+2025-12-19 23:33:22,659 - INFO -   SQL Server - Extracted 29 rows from Suppliers
+2025-12-19 23:33:22,661 - INFO -   SQL Server - Extracted 3 rows from Shippers
+2025-12-19 23:33:22,664 - INFO -   SQL Server - Extracted 53 rows from Territories
+2025-12-19 23:33:22,666 - INFO -   SQL Server - Extracted 4 rows from Region
+2025-12-19 23:33:22,667 - INFO - SQL Server connection closed
+2025-12-19 23:33:22,667 - INFO - 
+==================================================
+2025-12-19 23:33:22,667 - INFO - PHASE 1B: EXTRACTION FROM MICROSOFT ACCESS
+2025-12-19 23:33:22,667 - INFO - ==================================================
+2025-12-19 23:33:22,898 - INFO - ✓ Connected to Access Northwind 2012 database: C:\Users\noufe\Downloads\Northwind 2012.accdb
+2025-12-19 23:33:22,915 - INFO -   Access - Extracted 29 rows from Customers
+2025-12-19 23:33:22,952 - INFO -   Access - Extracted 45 rows from Products
+2025-12-19 23:33:22,965 - INFO -   Access - Extracted 9 rows from Employees
+2025-12-19 23:33:22,973 - INFO -   Access - Extracted 48 rows from Orders
+2025-12-19 23:33:22,977 - INFO -   Access - Extracted 58 rows from Order Details
+2025-12-19 23:33:22,977 - WARNING -   Access - No mapping for Categories, skipping
+2025-12-19 23:33:22,990 - INFO -   Access - Extracted 10 rows from Suppliers
+2025-12-19 23:33:22,995 - INFO -   Access - Extracted 3 rows from Shippers
+2025-12-19 23:33:22,995 - WARNING -   Access - No mapping for Territories, skipping
+2025-12-19 23:33:22,996 - WARNING -   Access - No mapping for Region, skipping
+2025-12-19 23:33:23,440 - INFO - Access connection closed
+2025-12-19 23:33:23,440 - INFO - 
+==================================================
+2025-12-19 23:33:23,440 - INFO - PHASE 2: TRANSFORM & MERGE (Dual Sources)
+2025-12-19 23:33:23,440 - INFO - ==================================================
+2025-12-19 23:33:23,441 - INFO - 
+Source Statistics Before Merge:
+2025-12-19 23:33:23,441 - INFO -   SQL Server tables: 10
+2025-12-19 23:33:23,441 - INFO -   Access tables: 7
+2025-12-19 23:33:23,441 - INFO - 
+Merging Customers...
+2025-12-19 23:33:23,443 - INFO -   Customers: SQL Server=91 | Access unique=29 | Common keys=0 | Total=120
+2025-12-19 23:33:23,443 - INFO - 
+Merging Products (SQL Server pricing takes precedence)...
+2025-12-19 23:33:23,446 - INFO -   Average price difference: $0.00 (SQL Server prices used)
+2025-12-19 23:33:23,448 - INFO -   Products: SQL Server=77 | Access unique=19 | Common keys=26 | Total=96
+2025-12-19 23:33:23,448 - INFO - 
+Merging Employees...
+2025-12-19 23:33:23,451 - INFO -   Employees: SQL Server=9 | Access unique=0 | Common keys=9 | Total=9
+2025-12-19 23:33:23,451 - INFO - 
+Merging Orders (deduplicating transactions)...
+2025-12-19 23:33:23,454 - INFO -   Orders: SQL Server=830 | Access unique=48 | Common keys=0 | Total=878
+2025-12-19 23:33:23,455 - INFO - 
+Merging Order Details (split by OrderID to match Orders)...
+2025-12-19 23:33:23,458 - INFO -   Order Details: SQL Server=2155 (97%) | Access=58 (2%) | Merged=2213
+2025-12-19 23:33:23,459 - INFO - 
+Merging Categories...
+2025-12-19 23:33:23,459 - INFO -   Categories: Only SQL Server data available (8 rows)
+2025-12-19 23:33:23,459 - INFO - 
+Merging Suppliers...
+2025-12-19 23:33:23,462 - INFO -   Suppliers: SQL Server=29 | Access unique=0 | Common keys=10 | Total=29
+2025-12-19 23:33:23,462 - INFO - 
+Merging Shippers...
+2025-12-19 23:33:23,464 - INFO -   Shippers: SQL Server=3 | Access unique=0 | Common keys=3 | Total=3
+2025-12-19 23:33:23,464 - INFO - 
+--------------------------------------------------
+2025-12-19 23:33:23,464 - INFO - Creating Star Schema (Data Warehouse Model)
+2025-12-19 23:33:23,464 - INFO - --------------------------------------------------
+2025-12-19 23:33:23,464 - INFO - 
+Creating Dim_Time...
+2025-12-19 23:33:23,474 - INFO -   ✓ Dim_Time: 536 unique dates
+2025-12-19 23:33:23,474 - INFO - 
+Creating Dim_Customers...
+2025-12-19 23:33:23,476 - INFO -   ✓ Dim_Customers: 120 customers
+2025-12-19 23:33:23,476 - INFO - 
+Creating Dim_Products...
+2025-12-19 23:33:23,479 - INFO -   ✓ Dim_Products: 96 products
+2025-12-19 23:33:23,479 - INFO - 
+Creating Dim_Employees...
+2025-12-19 23:33:23,480 - INFO -   ✓ Dim_Employees: 9 employees
+2025-12-19 23:33:23,481 - INFO - 
+Creating Fact_Sales...
+2025-12-19 23:33:23,494 - INFO -   ✓ Fact_Sales: 2213 transaction rows
+2025-12-19 23:33:23,495 - INFO -     Total Sales: $1,333,929.86
+2025-12-19 23:33:23,495 - INFO -     Average Order Value: $1,533.25
+2025-12-19 23:33:23,495 - INFO - 
+✓ Transform and merge completed
+2025-12-19 23:33:23,495 - INFO - 
+==================================================
+2025-12-19 23:33:23,496 - INFO - PHASE 3A: LOAD TO CSV FILES
+2025-12-19 23:33:23,496 - INFO - ==================================================
+2025-12-19 23:33:23,501 - INFO -   ✓ Saved Dim_Time.csv (536 rows)
+2025-12-19 23:33:23,502 - INFO -   ✓ Saved Dim_Customers.csv (120 rows)
+2025-12-19 23:33:23,504 - INFO -   ✓ Saved Dim_Products.csv (96 rows)
+2025-12-19 23:33:23,517 - INFO -   ✓ Saved Dim_Employees.csv (9 rows)
+2025-12-19 23:33:23,542 - INFO -   ✓ Saved Fact_Sales.csv (2213 rows)
+2025-12-19 23:33:23,542 - INFO - 
+Creating analysis views for dashboard...
+2025-12-19 23:33:23,550 - INFO -   ✓ Sales_By_Month.csv
+2025-12-19 23:33:23,555 - INFO -   ✓ Sales_By_Category.csv
+2025-12-19 23:33:23,560 - INFO -   ✓ Sales_By_Country.csv
+2025-12-19 23:33:23,564 - INFO -   ✓ Top_Products.csv
+2025-12-19 23:33:23,567 - INFO -   ✓ High_Freight_Orders.csv (13 orders)
+2025-12-19 23:33:23,570 - INFO -   ✓ Late_Deliveries.csv (37 orders)
+2025-12-19 23:33:23,571 - INFO - 
+==================================================
+2025-12-19 23:33:23,571 - INFO - PHASE 3B: LOAD TO DATA WAREHOUSE (SQLite)
+2025-12-19 23:33:23,571 - INFO - ==================================================
+2025-12-19 23:33:23,582 - INFO -   ✓ Loaded Dim_Time to DWH (536 rows)
+2025-12-19 23:33:23,591 - INFO -   ✓ Loaded Dim_Customers to DWH (120 rows)
+2025-12-19 23:33:23,598 - INFO -   ✓ Loaded Dim_Products to DWH (96 rows)
+2025-12-19 23:33:23,608 - INFO -   ✓ Loaded Dim_Employees to DWH (9 rows)
+2025-12-19 23:33:23,633 - INFO -   ✓ Loaded Fact_Sales to DWH (2213 rows)
+2025-12-19 23:33:23,633 - INFO - 
+✓ Data Warehouse saved: c:\Users\noufe\Desktop\BI Project\data\DWH_Northwind.db
+2025-12-19 23:33:23,633 - INFO - 
+======================================================================
+2025-12-19 23:33:23,634 - INFO - ETL COMPLETED SUCCESSFULLY
+2025-12-19 23:33:23,634 - INFO - ======================================================================
+2025-12-19 23:33:23,634 - INFO - Duration: 0:00:01.257695
+2025-12-19 23:33:23,634 - INFO - 
+--------------------------------------------------
+2025-12-19 23:33:23,634 - INFO - ETL SUMMARY
+2025-12-19 23:33:23,634 - INFO - --------------------------------------------------
+2025-12-19 23:33:23,634 - INFO - 
+📥 DATA SOURCES:
+2025-12-19 23:33:23,634 - INFO -   Source 1 (SQL Server): Connected
+2025-12-19 23:33:23,635 - INFO -     Tables extracted: ['Customers', 'Products', 'Employees', 'Orders', 'Order Details', 'Categories', 'Suppliers', 'Shippers', 'Territories', 'Region']
+2025-12-19 23:33:23,635 - INFO -   Source 2 (Access): Connected
+2025-12-19 23:33:23,635 - INFO -     Tables extracted: ['Customers', 'Products', 'Employees', 'Orders', 'Order Details', 'Suppliers', 'Shippers']
+2025-12-19 23:33:23,635 - INFO - 
+🔄 MERGED DATA:
+2025-12-19 23:33:23,635 - INFO -   Customers: 120 rows
+2025-12-19 23:33:23,635 - INFO -   Products: 96 rows
+2025-12-19 23:33:23,635 - INFO -   Employees: 9 rows
+2025-12-19 23:33:23,635 - INFO -   Orders: 878 rows
+2025-12-19 23:33:23,636 - INFO -   Order Details: 2213 rows
+2025-12-19 23:33:23,636 - INFO -   Categories: 8 rows
+2025-12-19 23:33:23,636 - INFO -   Suppliers: 29 rows
+2025-12-19 23:33:23,636 - INFO -   Shippers: 3 rows
+2025-12-19 23:33:23,636 - INFO - 
+⭐ STAR SCHEMA (Data Warehouse):
+2025-12-19 23:33:23,636 - INFO -   Dim_Time: 536 dates
+2025-12-19 23:33:23,636 - INFO -   Dim_Customers: 120 customers
+2025-12-19 23:33:23,637 - INFO -   Dim_Products: 96 products
+2025-12-19 23:33:23,637 - INFO -   Dim_Employees: 9 employees
+2025-12-19 23:33:23,637 - INFO -   Fact_Sales: 2213 transactions
+2025-12-19 23:33:23,637 - INFO -     Total Revenue: $1,333,929.86
+2025-12-19 23:33:23,637 - INFO - 
+📁 OUTPUT LOCATION: c:\Users\noufe\Desktop\BI Project\data
+2025-12-19 23:33:23,637 - INFO - 🗄️ DWH DATABASE: c:\Users\noufe\Desktop\BI Project\data\DWH_Northwind.db
+2025-12-19 23:34:37,951 - INFO - ======================================================================
+2025-12-19 23:34:37,951 - INFO - NORTHWIND ETL - DUAL HETEROGENEOUS SOURCE EXTRACTION
+2025-12-19 23:34:37,951 - INFO - ======================================================================
+2025-12-19 23:34:37,951 - INFO - Sources: SQL Server Northwind + Microsoft Access Northwind
+2025-12-19 23:34:37,952 - INFO - Output: Unified Star Schema Data Warehouse
+2025-12-19 23:34:37,952 - INFO - 
+ETL Started: 2025-12-19 23:34:37.952157
+2025-12-19 23:34:37,952 - INFO - 
+==================================================
+2025-12-19 23:34:37,952 - INFO - PHASE 1A: EXTRACTION FROM SQL SERVER
+2025-12-19 23:34:37,952 - INFO - ==================================================
+2025-12-19 23:34:37,998 - INFO - ✓ Connected to SQL Server Northwind database
+2025-12-19 23:34:38,191 - INFO -   SQL Server - Extracted 91 rows from Customers
+2025-12-19 23:34:38,195 - INFO -   SQL Server - Extracted 77 rows from Products
+2025-12-19 23:34:38,199 - INFO -   SQL Server - Extracted 9 rows from Employees
+2025-12-19 23:34:38,211 - INFO -   SQL Server - Extracted 830 rows from Orders
+2025-12-19 23:34:38,222 - INFO -   SQL Server - Extracted 2155 rows from Order Details
+2025-12-19 23:34:38,225 - INFO -   SQL Server - Extracted 8 rows from Categories
+2025-12-19 23:34:38,229 - INFO -   SQL Server - Extracted 29 rows from Suppliers
+2025-12-19 23:34:38,231 - INFO -   SQL Server - Extracted 3 rows from Shippers
+2025-12-19 23:34:38,233 - INFO -   SQL Server - Extracted 53 rows from Territories
+2025-12-19 23:34:38,235 - INFO -   SQL Server - Extracted 4 rows from Region
+2025-12-19 23:34:38,236 - INFO - SQL Server connection closed
+2025-12-19 23:34:38,236 - INFO - 
+==================================================
+2025-12-19 23:34:38,236 - INFO - PHASE 1B: EXTRACTION FROM MICROSOFT ACCESS
+2025-12-19 23:34:38,236 - INFO - ==================================================
+2025-12-19 23:34:38,453 - INFO - ✓ Connected to Access Northwind 2012 database: C:\Users\noufe\Downloads\Northwind 2012.accdb
+2025-12-19 23:34:38,469 - INFO -   Access - Extracted 29 rows from Customers
+2025-12-19 23:34:38,489 - INFO -   Access - Extracted 45 rows from Products
+2025-12-19 23:34:38,494 - INFO -   Access - Extracted 9 rows from Employees
+2025-12-19 23:34:38,501 - INFO -   Access - Extracted 48 rows from Orders
+2025-12-19 23:34:38,504 - INFO -   Access - Extracted 58 rows from Order Details
+2025-12-19 23:34:38,505 - WARNING -   Access - No mapping for Categories, skipping
+2025-12-19 23:34:38,510 - INFO -   Access - Extracted 10 rows from Suppliers
+2025-12-19 23:34:38,515 - INFO -   Access - Extracted 3 rows from Shippers
+2025-12-19 23:34:38,515 - WARNING -   Access - No mapping for Territories, skipping
+2025-12-19 23:34:38,516 - WARNING -   Access - No mapping for Region, skipping
+2025-12-19 23:34:38,889 - INFO - Access connection closed
+2025-12-19 23:34:38,889 - INFO - 
+==================================================
+2025-12-19 23:34:38,890 - INFO - PHASE 2: TRANSFORM & MERGE (Dual Sources)
+2025-12-19 23:34:38,890 - INFO - ==================================================
+2025-12-19 23:34:38,890 - INFO - 
+Source Statistics Before Merge:
+2025-12-19 23:34:38,890 - INFO -   SQL Server tables: 10
+2025-12-19 23:34:38,890 - INFO -   Access tables: 7
+2025-12-19 23:34:38,890 - INFO - 
+Merging Customers...
+2025-12-19 23:34:38,892 - INFO -   Customers: SQL Server=91 | Access unique=29 | Common keys=0 | Total=120
+2025-12-19 23:34:38,892 - INFO - 
+Merging Products (SQL Server pricing takes precedence)...
+2025-12-19 23:34:38,894 - INFO -   Average price difference: $0.00 (SQL Server prices used)
+2025-12-19 23:34:38,896 - INFO -   Products: SQL Server=77 | Access unique=19 | Common keys=26 | Total=96
+2025-12-19 23:34:38,897 - INFO - 
+Merging Employees...
+2025-12-19 23:34:38,899 - INFO -   Employees: SQL Server=9 | Access unique=0 | Common keys=9 | Total=9
+2025-12-19 23:34:38,900 - INFO - 
+Merging Orders (deduplicating transactions)...
+2025-12-19 23:34:38,903 - INFO -   Orders: SQL Server=830 | Access unique=48 | Common keys=0 | Total=878
+2025-12-19 23:34:38,903 - INFO - 
+Merging Order Details (split by OrderID to match Orders)...
+2025-12-19 23:34:38,907 - INFO -   Order Details: SQL Server=2155 (97%) | Access=58 (2%) | Merged=2213
+2025-12-19 23:34:38,907 - INFO - 
+Merging Categories...
+2025-12-19 23:34:38,907 - INFO -   Categories: Only SQL Server data available (8 rows)
+2025-12-19 23:34:38,908 - INFO - 
+Merging Suppliers...
+2025-12-19 23:34:38,909 - INFO -   Suppliers: SQL Server=29 | Access unique=0 | Common keys=10 | Total=29
+2025-12-19 23:34:38,909 - INFO - 
+Merging Shippers...
+2025-12-19 23:34:38,911 - INFO -   Shippers: SQL Server=3 | Access unique=0 | Common keys=3 | Total=3
+2025-12-19 23:34:38,911 - INFO - 
+--------------------------------------------------
+2025-12-19 23:34:38,911 - INFO - Creating Star Schema (Data Warehouse Model)
+2025-12-19 23:34:38,912 - INFO - --------------------------------------------------
+2025-12-19 23:34:38,912 - INFO - 
+Creating Dim_Time...
+2025-12-19 23:34:38,921 - INFO -   ✓ Dim_Time: 536 unique dates
+2025-12-19 23:34:38,921 - INFO - 
+Creating Dim_Customers...
+2025-12-19 23:34:38,923 - INFO -   ✓ Dim_Customers: 120 customers
+2025-12-19 23:34:38,923 - INFO - 
+Creating Dim_Products...
+2025-12-19 23:34:38,926 - INFO -   ✓ Dim_Products: 96 products
+2025-12-19 23:34:38,926 - INFO - 
+Creating Dim_Employees...
+2025-12-19 23:34:38,927 - INFO -   ✓ Dim_Employees: 9 employees
+2025-12-19 23:34:38,927 - INFO - 
+Creating Fact_Sales...
+2025-12-19 23:34:38,941 - INFO -   ✓ Fact_Sales: 2213 transaction rows
+2025-12-19 23:34:38,942 - INFO -     Total Sales: $1,333,929.86
+2025-12-19 23:34:38,942 - INFO -     Average Order Value: $1,533.25
+2025-12-19 23:34:38,943 - INFO - 
+✓ Transform and merge completed
+2025-12-19 23:34:38,943 - INFO - 
+==================================================
+2025-12-19 23:34:38,943 - INFO - PHASE 3A: LOAD TO CSV FILES
+2025-12-19 23:34:38,943 - INFO - ==================================================
+2025-12-19 23:34:38,948 - INFO -   ✓ Saved Dim_Time.csv (536 rows)
+2025-12-19 23:34:38,950 - INFO -   ✓ Saved Dim_Customers.csv (120 rows)
+2025-12-19 23:34:38,952 - INFO -   ✓ Saved Dim_Products.csv (96 rows)
+2025-12-19 23:34:38,965 - INFO -   ✓ Saved Dim_Employees.csv (9 rows)
+2025-12-19 23:34:38,993 - INFO -   ✓ Saved Fact_Sales.csv (2213 rows)
+2025-12-19 23:34:38,993 - INFO - 
+Creating analysis views for dashboard...
+2025-12-19 23:34:39,003 - INFO -   ✓ Sales_By_Month.csv
+2025-12-19 23:34:39,009 - INFO -   ✓ Sales_By_Category.csv
+2025-12-19 23:34:39,013 - INFO -   ✓ Sales_By_Country.csv
+2025-12-19 23:34:39,018 - INFO -   ✓ Top_Products.csv
+2025-12-19 23:34:39,022 - INFO -   ✓ High_Freight_Orders.csv (13 orders)
+2025-12-19 23:34:39,026 - INFO -   ✓ Late_Deliveries.csv (37 orders)
+2025-12-19 23:34:39,026 - INFO - 
+==================================================
+2025-12-19 23:34:39,027 - INFO - PHASE 3B: LOAD TO DATA WAREHOUSE (SQLite)
+2025-12-19 23:34:39,027 - INFO - ==================================================
+2025-12-19 23:34:39,038 - INFO -   ✓ Loaded Dim_Time to DWH (536 rows)
+2025-12-19 23:34:39,045 - INFO -   ✓ Loaded Dim_Customers to DWH (120 rows)
+2025-12-19 23:34:39,060 - INFO -   ✓ Loaded Dim_Products to DWH (96 rows)
+2025-12-19 23:34:39,069 - INFO -   ✓ Loaded Dim_Employees to DWH (9 rows)
+2025-12-19 23:34:39,096 - INFO -   ✓ Loaded Fact_Sales to DWH (2213 rows)
+2025-12-19 23:34:39,097 - INFO - 
+✓ Data Warehouse saved: c:\Users\noufe\Desktop\BI Project\data\DWH_Northwind.db
+2025-12-19 23:34:39,097 - INFO - 
+======================================================================
+2025-12-19 23:34:39,097 - INFO - ETL COMPLETED SUCCESSFULLY
+2025-12-19 23:34:39,097 - INFO - ======================================================================
+2025-12-19 23:34:39,097 - INFO - Duration: 0:00:01.145153
+2025-12-19 23:34:39,097 - INFO - 
+--------------------------------------------------
+2025-12-19 23:34:39,097 - INFO - ETL SUMMARY
+2025-12-19 23:34:39,098 - INFO - --------------------------------------------------
+2025-12-19 23:34:39,098 - INFO - 
+📥 DATA SOURCES:
+2025-12-19 23:34:39,098 - INFO -   Source 1 (SQL Server): Connected
+2025-12-19 23:34:39,098 - INFO -     Tables extracted: ['Customers', 'Products', 'Employees', 'Orders', 'Order Details', 'Categories', 'Suppliers', 'Shippers', 'Territories', 'Region']
+2025-12-19 23:34:39,098 - INFO -   Source 2 (Access): Connected
+2025-12-19 23:34:39,098 - INFO -     Tables extracted: ['Customers', 'Products', 'Employees', 'Orders', 'Order Details', 'Suppliers', 'Shippers']
+2025-12-19 23:34:39,098 - INFO - 
+🔄 MERGED DATA:
+2025-12-19 23:34:39,099 - INFO -   Customers: 120 rows
+2025-12-19 23:34:39,099 - INFO -   Products: 96 rows
+2025-12-19 23:34:39,099 - INFO -   Employees: 9 rows
+2025-12-19 23:34:39,099 - INFO -   Orders: 878 rows
+2025-12-19 23:34:39,099 - INFO -   Order Details: 2213 rows
+2025-12-19 23:34:39,099 - INFO -   Categories: 8 rows
+2025-12-19 23:34:39,099 - INFO -   Suppliers: 29 rows
+2025-12-19 23:34:39,099 - INFO -   Shippers: 3 rows
+2025-12-19 23:34:39,100 - INFO - 
+⭐ STAR SCHEMA (Data Warehouse):
+2025-12-19 23:34:39,100 - INFO -   Dim_Time: 536 dates
+2025-12-19 23:34:39,100 - INFO -   Dim_Customers: 120 customers
+2025-12-19 23:34:39,100 - INFO -   Dim_Products: 96 products
+2025-12-19 23:34:39,100 - INFO -   Dim_Employees: 9 employees
+2025-12-19 23:34:39,100 - INFO -   Fact_Sales: 2213 transactions
+2025-12-19 23:34:39,100 - INFO -     Total Revenue: $1,333,929.86
+2025-12-19 23:34:39,101 - INFO - 
+📁 OUTPUT LOCATION: c:\Users\noufe\Desktop\BI Project\data
+2025-12-19 23:34:39,101 - INFO - 🗄️ DWH DATABASE: c:\Users\noufe\Desktop\BI Project\data\DWH_Northwind.db
+2025-12-19 23:36:01,452 - INFO - ======================================================================
+2025-12-19 23:36:01,452 - INFO - NORTHWIND ETL - DUAL HETEROGENEOUS SOURCE EXTRACTION
+2025-12-19 23:36:01,452 - INFO - ======================================================================
+2025-12-19 23:36:01,452 - INFO - Sources: SQL Server Northwind + Microsoft Access Northwind
+2025-12-19 23:36:01,452 - INFO - Output: Unified Star Schema Data Warehouse
+2025-12-19 23:36:01,452 - INFO - 
+ETL Started: 2025-12-19 23:36:01.452950
+2025-12-19 23:36:01,453 - INFO - 
+==================================================
+2025-12-19 23:36:01,453 - INFO - PHASE 1A: EXTRACTION FROM SQL SERVER
+2025-12-19 23:36:01,453 - INFO - ==================================================
+2025-12-19 23:36:01,502 - INFO - ✓ Connected to SQL Server Northwind database
+2025-12-19 23:36:01,697 - INFO -   SQL Server - Extracted 91 rows from Customers
+2025-12-19 23:36:01,701 - INFO -   SQL Server - Extracted 77 rows from Products
+2025-12-19 23:36:01,705 - INFO -   SQL Server - Extracted 9 rows from Employees
+2025-12-19 23:36:01,717 - INFO -   SQL Server - Extracted 830 rows from Orders
+2025-12-19 23:36:01,729 - INFO -   SQL Server - Extracted 2155 rows from Order Details
+2025-12-19 23:36:01,732 - INFO -   SQL Server - Extracted 8 rows from Categories
+2025-12-19 23:36:01,734 - INFO -   SQL Server - Extracted 29 rows from Suppliers
+2025-12-19 23:36:01,737 - INFO -   SQL Server - Extracted 3 rows from Shippers
+2025-12-19 23:36:01,739 - INFO -   SQL Server - Extracted 53 rows from Territories
+2025-12-19 23:36:01,741 - INFO -   SQL Server - Extracted 4 rows from Region
+2025-12-19 23:36:01,741 - INFO - SQL Server connection closed
+2025-12-19 23:36:01,741 - INFO - 
+==================================================
+2025-12-19 23:36:01,742 - INFO - PHASE 1B: EXTRACTION FROM MICROSOFT ACCESS
+2025-12-19 23:36:01,742 - INFO - ==================================================
+2025-12-19 23:36:01,967 - INFO - ✓ Connected to Access Northwind 2012 database: C:\Users\noufe\Downloads\Northwind 2012.accdb
+2025-12-19 23:36:01,982 - INFO -   Access - Extracted 29 rows from Customers
+2025-12-19 23:36:01,999 - INFO -   Access - Extracted 45 rows from Products
+2025-12-19 23:36:02,003 - INFO -   Access - Extracted 9 rows from Employees
+2025-12-19 23:36:02,009 - INFO -   Access - Extracted 48 rows from Orders
+2025-12-19 23:36:02,013 - INFO -   Access - Extracted 58 rows from Order Details
+2025-12-19 23:36:02,013 - WARNING -   Access - No mapping for Categories, skipping
+2025-12-19 23:36:02,018 - INFO -   Access - Extracted 10 rows from Suppliers
+2025-12-19 23:36:02,022 - INFO -   Access - Extracted 3 rows from Shippers
+2025-12-19 23:36:02,023 - WARNING -   Access - No mapping for Territories, skipping
+2025-12-19 23:36:02,023 - WARNING -   Access - No mapping for Region, skipping
+2025-12-19 23:36:02,261 - INFO - Access connection closed
+2025-12-19 23:36:02,261 - INFO - 
+==================================================
+2025-12-19 23:36:02,261 - INFO - PHASE 2: TRANSFORM & MERGE (Dual Sources)
+2025-12-19 23:36:02,262 - INFO - ==================================================
+2025-12-19 23:36:02,262 - INFO - 
+Source Statistics Before Merge:
+2025-12-19 23:36:02,262 - INFO -   SQL Server tables: 10
+2025-12-19 23:36:02,262 - INFO -   Access tables: 7
+2025-12-19 23:36:02,262 - INFO - 
+Merging Customers...
+2025-12-19 23:36:02,264 - INFO -   Customers: SQL Server=91 | Access unique=29 | Common keys=0 | Total=120
+2025-12-19 23:36:02,264 - INFO - 
+Merging Products (SQL Server pricing takes precedence)...
+2025-12-19 23:36:02,266 - INFO -   Average price difference: $0.00 (SQL Server prices used)
+2025-12-19 23:36:02,268 - INFO -   Products: SQL Server=77 | Access unique=19 | Common keys=26 | Total=96
+2025-12-19 23:36:02,268 - INFO - 
+Merging Employees...
+2025-12-19 23:36:02,270 - INFO -   Employees: SQL Server=9 | Access unique=0 | Common keys=9 | Total=9
+2025-12-19 23:36:02,270 - INFO - 
+Merging Orders (deduplicating transactions)...
+2025-12-19 23:36:02,273 - INFO -   Orders: SQL Server=830 | Access unique=48 | Common keys=0 | Total=878
+2025-12-19 23:36:02,273 - INFO - 
+Merging Order Details (split by OrderID to match Orders)...
+2025-12-19 23:36:02,277 - INFO -   Order Details: SQL Server=2155 (97%) | Access=58 (2%) | Merged=2213
+2025-12-19 23:36:02,278 - INFO - 
+Merging Categories...
+2025-12-19 23:36:02,278 - INFO -   Categories: Only SQL Server data available (8 rows)
+2025-12-19 23:36:02,278 - INFO - 
+Merging Suppliers...
+2025-12-19 23:36:02,280 - INFO -   Suppliers: SQL Server=29 | Access unique=0 | Common keys=10 | Total=29
+2025-12-19 23:36:02,280 - INFO - 
+Merging Shippers...
+2025-12-19 23:36:02,282 - INFO -   Shippers: SQL Server=3 | Access unique=0 | Common keys=3 | Total=3
+2025-12-19 23:36:02,282 - INFO - 
+--------------------------------------------------
+2025-12-19 23:36:02,282 - INFO - Creating Star Schema (Data Warehouse Model)
+2025-12-19 23:36:02,283 - INFO - --------------------------------------------------
+2025-12-19 23:36:02,283 - INFO - 
+Creating Dim_Time...
+2025-12-19 23:36:02,292 - INFO -   ✓ Dim_Time: 536 unique dates
+2025-12-19 23:36:02,292 - INFO - 
+Creating Dim_Customers...
+2025-12-19 23:36:02,293 - INFO -   ✓ Dim_Customers: 120 customers
+2025-12-19 23:36:02,294 - INFO - 
+Creating Dim_Products...
+2025-12-19 23:36:02,297 - INFO -   ✓ Dim_Products: 96 products
+2025-12-19 23:36:02,297 - INFO - 
+Creating Dim_Employees...
+2025-12-19 23:36:02,298 - INFO -   ✓ Dim_Employees: 9 employees
+2025-12-19 23:36:02,299 - INFO - 
+Creating Fact_Sales...
+2025-12-19 23:36:02,312 - INFO -   ✓ Fact_Sales: 2213 transaction rows
+2025-12-19 23:36:02,313 - INFO -     Total Sales: $1,333,929.86
+2025-12-19 23:36:02,313 - INFO -     Average Order Value: $1,533.25
+2025-12-19 23:36:02,313 - INFO - 
+✓ Transform and merge completed
+2025-12-19 23:36:02,314 - INFO - 
+==================================================
+2025-12-19 23:36:02,314 - INFO - PHASE 3A: LOAD TO CSV FILES
+2025-12-19 23:36:02,314 - INFO - ==================================================
+2025-12-19 23:36:02,318 - INFO -   ✓ Saved Dim_Time.csv (536 rows)
+2025-12-19 23:36:02,320 - INFO -   ✓ Saved Dim_Customers.csv (120 rows)
+2025-12-19 23:36:02,322 - INFO -   ✓ Saved Dim_Products.csv (96 rows)
+2025-12-19 23:36:02,335 - INFO -   ✓ Saved Dim_Employees.csv (9 rows)
+2025-12-19 23:36:02,360 - INFO -   ✓ Saved Fact_Sales.csv (2213 rows)
+2025-12-19 23:36:02,361 - INFO - 
+Creating analysis views for dashboard...
+2025-12-19 23:36:02,368 - INFO -   ✓ Sales_By_Month.csv
+2025-12-19 23:36:02,373 - INFO -   ✓ Sales_By_Category.csv
+2025-12-19 23:36:02,377 - INFO -   ✓ Sales_By_Country.csv
+2025-12-19 23:36:02,381 - INFO -   ✓ Top_Products.csv
+2025-12-19 23:36:02,385 - INFO -   ✓ High_Freight_Orders.csv (13 orders)
+2025-12-19 23:36:02,388 - INFO -   ✓ Late_Deliveries.csv (37 orders)
+2025-12-19 23:36:02,389 - INFO - 
+==================================================
+2025-12-19 23:36:02,389 - INFO - PHASE 3B: LOAD TO DATA WAREHOUSE (SQLite)
+2025-12-19 23:36:02,389 - INFO - ==================================================
+2025-12-19 23:36:02,401 - INFO -   ✓ Loaded Dim_Time to DWH (536 rows)
+2025-12-19 23:36:02,409 - INFO -   ✓ Loaded Dim_Customers to DWH (120 rows)
+2025-12-19 23:36:02,417 - INFO -   ✓ Loaded Dim_Products to DWH (96 rows)
+2025-12-19 23:36:02,425 - INFO -   ✓ Loaded Dim_Employees to DWH (9 rows)
+2025-12-19 23:36:02,450 - INFO -   ✓ Loaded Fact_Sales to DWH (2213 rows)
+2025-12-19 23:36:02,450 - INFO - 
+✓ Data Warehouse saved: c:\Users\noufe\Desktop\BI Project\data\DWH_Northwind.db
+2025-12-19 23:36:02,451 - INFO - 
+======================================================================
+2025-12-19 23:36:02,451 - INFO - ETL COMPLETED SUCCESSFULLY
+2025-12-19 23:36:02,451 - INFO - ======================================================================
+2025-12-19 23:36:02,451 - INFO - Duration: 0:00:00.998186
+2025-12-19 23:36:02,451 - INFO - 
+--------------------------------------------------
+2025-12-19 23:36:02,451 - INFO - ETL SUMMARY
+2025-12-19 23:36:02,451 - INFO - --------------------------------------------------
+2025-12-19 23:36:02,452 - INFO - 
+📥 DATA SOURCES:
+2025-12-19 23:36:02,452 - INFO -   Source 1 (SQL Server): Connected
+2025-12-19 23:36:02,452 - INFO -     Tables extracted: ['Customers', 'Products', 'Employees', 'Orders', 'Order Details', 'Categories', 'Suppliers', 'Shippers', 'Territories', 'Region']
+2025-12-19 23:36:02,452 - INFO -   Source 2 (Access): Connected
+2025-12-19 23:36:02,452 - INFO -     Tables extracted: ['Customers', 'Products', 'Employees', 'Orders', 'Order Details', 'Suppliers', 'Shippers']
+2025-12-19 23:36:02,452 - INFO - 
+🔄 MERGED DATA:
+2025-12-19 23:36:02,453 - INFO -   Customers: 120 rows
+2025-12-19 23:36:02,453 - INFO -   Products: 96 rows
+2025-12-19 23:36:02,453 - INFO -   Employees: 9 rows
+2025-12-19 23:36:02,453 - INFO -   Orders: 878 rows
+2025-12-19 23:36:02,453 - INFO -   Order Details: 2213 rows
+2025-12-19 23:36:02,453 - INFO -   Categories: 8 rows
+2025-12-19 23:36:02,453 - INFO -   Suppliers: 29 rows
+2025-12-19 23:36:02,453 - INFO -   Shippers: 3 rows
+2025-12-19 23:36:02,454 - INFO - 
+⭐ STAR SCHEMA (Data Warehouse):
+2025-12-19 23:36:02,454 - INFO -   Dim_Time: 536 dates
+2025-12-19 23:36:02,454 - INFO -   Dim_Customers: 120 customers
+2025-12-19 23:36:02,454 - INFO -   Dim_Products: 96 products
+2025-12-19 23:36:02,454 - INFO -   Dim_Employees: 9 employees
+2025-12-19 23:36:02,454 - INFO -   Fact_Sales: 2213 transactions
+2025-12-19 23:36:02,454 - INFO -     Total Revenue: $1,333,929.86
+2025-12-19 23:36:02,455 - INFO - 
+📁 OUTPUT LOCATION: c:\Users\noufe\Desktop\BI Project\data
+2025-12-19 23:36:02,455 - INFO - 🗄️ DWH DATABASE: c:\Users\noufe\Desktop\BI Project\data\DWH_Northwind.db
+2025-12-19 23:37:28,356 - INFO - ======================================================================
+2025-12-19 23:37:28,357 - INFO - NORTHWIND ETL - DUAL HETEROGENEOUS SOURCE EXTRACTION
+2025-12-19 23:37:28,357 - INFO - ======================================================================
+2025-12-19 23:37:28,357 - INFO - Sources: SQL Server Northwind + Microsoft Access Northwind
+2025-12-19 23:37:28,357 - INFO - Output: Unified Star Schema Data Warehouse
+2025-12-19 23:37:28,357 - INFO - 
+ETL Started: 2025-12-19 23:37:28.357573
+2025-12-19 23:37:28,357 - INFO - 
+==================================================
+2025-12-19 23:37:28,357 - INFO - PHASE 1A: EXTRACTION FROM SQL SERVER
+2025-12-19 23:37:28,357 - INFO - ==================================================
+2025-12-19 23:37:28,404 - INFO - ✓ Connected to SQL Server Northwind database
+2025-12-19 23:37:28,588 - INFO -   SQL Server - Extracted 91 rows from Customers
+2025-12-19 23:37:28,592 - INFO -   SQL Server - Extracted 77 rows from Products
+2025-12-19 23:37:28,596 - INFO -   SQL Server - Extracted 9 rows from Employees
+2025-12-19 23:37:28,608 - INFO -   SQL Server - Extracted 830 rows from Orders
+2025-12-19 23:37:28,620 - INFO -   SQL Server - Extracted 2155 rows from Order Details
+2025-12-19 23:37:28,624 - INFO -   SQL Server - Extracted 8 rows from Categories
+2025-12-19 23:37:28,627 - INFO -   SQL Server - Extracted 29 rows from Suppliers
+2025-12-19 23:37:28,630 - INFO -   SQL Server - Extracted 3 rows from Shippers
+2025-12-19 23:37:28,632 - INFO -   SQL Server - Extracted 53 rows from Territories
+2025-12-19 23:37:28,633 - INFO -   SQL Server - Extracted 4 rows from Region
+2025-12-19 23:37:28,634 - INFO - SQL Server connection closed
+2025-12-19 23:37:28,634 - INFO - 
+==================================================
+2025-12-19 23:37:28,634 - INFO - PHASE 1B: EXTRACTION FROM MICROSOFT ACCESS
+2025-12-19 23:37:28,634 - INFO - ==================================================
+2025-12-19 23:37:28,872 - INFO - ✓ Connected to Access Northwind 2012 database: C:\Users\noufe\Downloads\Northwind 2012.accdb
+2025-12-19 23:37:28,889 - INFO -   Access - Extracted 29 rows from Customers
+2025-12-19 23:37:28,909 - INFO -   Access - Extracted 45 rows from Products
+2025-12-19 23:37:28,915 - INFO -   Access - Extracted 9 rows from Employees
+2025-12-19 23:37:28,920 - INFO -   Access - Extracted 48 rows from Orders
+2025-12-19 23:37:28,923 - INFO -   Access - Extracted 58 rows from Order Details
+2025-12-19 23:37:28,924 - WARNING -   Access - No mapping for Categories, skipping
+2025-12-19 23:37:28,929 - INFO -   Access - Extracted 10 rows from Suppliers
+2025-12-19 23:37:28,934 - INFO -   Access - Extracted 3 rows from Shippers
+2025-12-19 23:37:28,934 - WARNING -   Access - No mapping for Territories, skipping
+2025-12-19 23:37:28,934 - WARNING -   Access - No mapping for Region, skipping
+2025-12-19 23:37:29,322 - INFO - Access connection closed
+2025-12-19 23:37:29,322 - INFO - 
+==================================================
+2025-12-19 23:37:29,322 - INFO - PHASE 2: TRANSFORM & MERGE (Dual Sources)
+2025-12-19 23:37:29,322 - INFO - ==================================================
+2025-12-19 23:37:29,322 - INFO - 
+Source Statistics Before Merge:
+2025-12-19 23:37:29,322 - INFO -   SQL Server tables: 10
+2025-12-19 23:37:29,323 - INFO -   Access tables: 7
+2025-12-19 23:37:29,323 - INFO - 
+Merging Customers...
+2025-12-19 23:37:29,325 - INFO -   Customers: SQL Server=91 | Access unique=29 | Common keys=0 | Total=120
+2025-12-19 23:37:29,325 - INFO - 
+Merging Products (SQL Server pricing takes precedence)...
+2025-12-19 23:37:29,328 - INFO -   Average price difference: $0.00 (SQL Server prices used)
+2025-12-19 23:37:29,330 - INFO -   Products: SQL Server=77 | Access unique=19 | Common keys=26 | Total=96
+2025-12-19 23:37:29,330 - INFO - 
+Merging Employees...
+2025-12-19 23:37:29,333 - INFO -   Employees: SQL Server=9 | Access unique=0 | Common keys=9 | Total=9
+2025-12-19 23:37:29,334 - INFO - 
+Merging Orders (deduplicating transactions)...
+2025-12-19 23:37:29,337 - INFO -   Orders: SQL Server=830 | Access unique=48 | Common keys=0 | Total=878
+2025-12-19 23:37:29,337 - INFO - 
+Merging Order Details (split by OrderID to match Orders)...
+2025-12-19 23:37:29,342 - INFO -   Order Details: SQL Server=2155 (97%) | Access=58 (2%) | Merged=2213
+2025-12-19 23:37:29,342 - INFO - 
+Merging Categories...
+2025-12-19 23:37:29,343 - INFO -   Categories: Only SQL Server data available (8 rows)
+2025-12-19 23:37:29,343 - INFO - 
+Merging Suppliers...
+2025-12-19 23:37:29,346 - INFO -   Suppliers: SQL Server=29 | Access unique=0 | Common keys=10 | Total=29
+2025-12-19 23:37:29,346 - INFO - 
+Merging Shippers...
+2025-12-19 23:37:29,348 - INFO -   Shippers: SQL Server=3 | Access unique=0 | Common keys=3 | Total=3
+2025-12-19 23:37:29,348 - INFO - 
+--------------------------------------------------
+2025-12-19 23:37:29,348 - INFO - Creating Star Schema (Data Warehouse Model)
+2025-12-19 23:37:29,348 - INFO - --------------------------------------------------
+2025-12-19 23:37:29,349 - INFO - 
+Creating Dim_Time...
+2025-12-19 23:37:29,360 - INFO -   ✓ Dim_Time: 536 unique dates
+2025-12-19 23:37:29,360 - INFO - 
+Creating Dim_Customers...
+2025-12-19 23:37:29,362 - INFO -   ✓ Dim_Customers: 120 customers
+2025-12-19 23:37:29,362 - INFO - 
+Creating Dim_Products...
+2025-12-19 23:37:29,366 - INFO -   ✓ Dim_Products: 96 products
+2025-12-19 23:37:29,366 - INFO - 
+Creating Dim_Employees...
+2025-12-19 23:37:29,368 - INFO -   ✓ Dim_Employees: 9 employees
+2025-12-19 23:37:29,368 - INFO - 
+Creating Fact_Sales...
+2025-12-19 23:37:29,386 - INFO -   ✓ Fact_Sales: 2213 transaction rows
+2025-12-19 23:37:29,387 - INFO -     Total Sales: $1,333,929.86
+2025-12-19 23:37:29,387 - INFO -     Average Order Value: $1,533.25
+2025-12-19 23:37:29,387 - INFO - 
+✓ Transform and merge completed
+2025-12-19 23:37:29,387 - INFO - 
+==================================================
+2025-12-19 23:37:29,388 - INFO - PHASE 3A: LOAD TO CSV FILES
+2025-12-19 23:37:29,388 - INFO - ==================================================
+2025-12-19 23:37:29,393 - INFO -   ✓ Saved Dim_Time.csv (536 rows)
+2025-12-19 23:37:29,396 - INFO -   ✓ Saved Dim_Customers.csv (120 rows)
+2025-12-19 23:37:29,398 - INFO -   ✓ Saved Dim_Products.csv (96 rows)
+2025-12-19 23:37:29,411 - INFO -   ✓ Saved Dim_Employees.csv (9 rows)
+2025-12-19 23:37:29,437 - INFO -   ✓ Saved Fact_Sales.csv (2213 rows)
+2025-12-19 23:37:29,437 - INFO - 
+Creating analysis views for dashboard...
+2025-12-19 23:37:29,444 - INFO -   ✓ Sales_By_Month.csv
+2025-12-19 23:37:29,450 - INFO -   ✓ Sales_By_Category.csv
+2025-12-19 23:37:29,454 - INFO -   ✓ Sales_By_Country.csv
+2025-12-19 23:37:29,458 - INFO -   ✓ Top_Products.csv
+2025-12-19 23:37:29,462 - INFO -   ✓ High_Freight_Orders.csv (13 orders)
+2025-12-19 23:37:29,472 - INFO -   ✓ Late_Deliveries.csv (37 orders)
+2025-12-19 23:37:29,473 - INFO - 
+==================================================
+2025-12-19 23:37:29,474 - INFO - PHASE 3B: LOAD TO DATA WAREHOUSE (SQLite)
+2025-12-19 23:37:29,475 - INFO - ==================================================
+2025-12-19 23:37:29,501 - INFO -   ✓ Loaded Dim_Time to DWH (536 rows)
+2025-12-19 23:37:29,515 - INFO -   ✓ Loaded Dim_Customers to DWH (120 rows)
+2025-12-19 23:37:29,529 - INFO -   ✓ Loaded Dim_Products to DWH (96 rows)
+2025-12-19 23:37:29,542 - INFO -   ✓ Loaded Dim_Employees to DWH (9 rows)
+2025-12-19 23:37:29,574 - INFO -   ✓ Loaded Fact_Sales to DWH (2213 rows)
+2025-12-19 23:37:29,575 - INFO - 
+✓ Data Warehouse saved: c:\Users\noufe\Desktop\BI Project\data\DWH_Northwind.db
+2025-12-19 23:37:29,575 - INFO - 
+======================================================================
+2025-12-19 23:37:29,575 - INFO - ETL COMPLETED SUCCESSFULLY
+2025-12-19 23:37:29,575 - INFO - ======================================================================
+2025-12-19 23:37:29,575 - INFO - Duration: 0:00:01.217626
+2025-12-19 23:37:29,575 - INFO - 
+--------------------------------------------------
+2025-12-19 23:37:29,575 - INFO - ETL SUMMARY
+2025-12-19 23:37:29,575 - INFO - --------------------------------------------------
+2025-12-19 23:37:29,576 - INFO - 
+📥 DATA SOURCES:
+2025-12-19 23:37:29,576 - INFO -   Source 1 (SQL Server): Connected
+2025-12-19 23:37:29,576 - INFO -     Tables extracted: ['Customers', 'Products', 'Employees', 'Orders', 'Order Details', 'Categories', 'Suppliers', 'Shippers', 'Territories', 'Region']
+2025-12-19 23:37:29,576 - INFO -   Source 2 (Access): Connected
+2025-12-19 23:37:29,576 - INFO -     Tables extracted: ['Customers', 'Products', 'Employees', 'Orders', 'Order Details', 'Suppliers', 'Shippers']
+2025-12-19 23:37:29,576 - INFO - 
+🔄 MERGED DATA:
+2025-12-19 23:37:29,576 - INFO -   Customers: 120 rows
+2025-12-19 23:37:29,576 - INFO -   Products: 96 rows
+2025-12-19 23:37:29,576 - INFO -   Employees: 9 rows
+2025-12-19 23:37:29,577 - INFO -   Orders: 878 rows
+2025-12-19 23:37:29,577 - INFO -   Order Details: 2213 rows
+2025-12-19 23:37:29,577 - INFO -   Categories: 8 rows
+2025-12-19 23:37:29,577 - INFO -   Suppliers: 29 rows
+2025-12-19 23:37:29,577 - INFO -   Shippers: 3 rows
+2025-12-19 23:37:29,577 - INFO - 
+⭐ STAR SCHEMA (Data Warehouse):
+2025-12-19 23:37:29,577 - INFO -   Dim_Time: 536 dates
+2025-12-19 23:37:29,577 - INFO -   Dim_Customers: 120 customers
+2025-12-19 23:37:29,578 - INFO -   Dim_Products: 96 products
+2025-12-19 23:37:29,578 - INFO -   Dim_Employees: 9 employees
+2025-12-19 23:37:29,578 - INFO -   Fact_Sales: 2213 transactions
+2025-12-19 23:37:29,578 - INFO -     Total Revenue: $1,333,929.86
+2025-12-19 23:37:29,578 - INFO - 
+📁 OUTPUT LOCATION: c:\Users\noufe\Desktop\BI Project\data
+2025-12-19 23:37:29,578 - INFO - 🗄️ DWH DATABASE: c:\Users\noufe\Desktop\BI Project\data\DWH_Northwind.db
+2025-12-19 23:38:36,455 - INFO - ======================================================================
+2025-12-19 23:38:36,455 - INFO - NORTHWIND ETL - DUAL HETEROGENEOUS SOURCE EXTRACTION
+2025-12-19 23:38:36,456 - INFO - ======================================================================
+2025-12-19 23:38:36,456 - INFO - Sources: SQL Server Northwind + Microsoft Access Northwind
+2025-12-19 23:38:36,456 - INFO - Output: Unified Star Schema Data Warehouse
+2025-12-19 23:38:36,456 - INFO - 
+ETL Started: 2025-12-19 23:38:36.456397
+2025-12-19 23:38:36,456 - INFO - 
+==================================================
+2025-12-19 23:38:36,456 - INFO - PHASE 1A: EXTRACTION FROM SQL SERVER
+2025-12-19 23:38:36,456 - INFO - ==================================================
+2025-12-19 23:38:36,502 - INFO - ✓ Connected to SQL Server Northwind database
+2025-12-19 23:38:36,733 - INFO -   SQL Server - Extracted 91 rows from Customers
+2025-12-19 23:38:36,736 - INFO -   SQL Server - Extracted 77 rows from Products
+2025-12-19 23:38:36,740 - INFO -   SQL Server - Extracted 9 rows from Employees
+2025-12-19 23:38:36,750 - INFO -   SQL Server - Extracted 830 rows from Orders
+2025-12-19 23:38:36,761 - INFO -   SQL Server - Extracted 2155 rows from Order Details
+2025-12-19 23:38:36,763 - INFO -   SQL Server - Extracted 8 rows from Categories
+2025-12-19 23:38:36,765 - INFO -   SQL Server - Extracted 29 rows from Suppliers
+2025-12-19 23:38:36,767 - INFO -   SQL Server - Extracted 3 rows from Shippers
+2025-12-19 23:38:36,769 - INFO -   SQL Server - Extracted 53 rows from Territories
+2025-12-19 23:38:36,771 - INFO -   SQL Server - Extracted 4 rows from Region
+2025-12-19 23:38:36,771 - INFO - SQL Server connection closed
+2025-12-19 23:38:36,771 - INFO - 
+==================================================
+2025-12-19 23:38:36,771 - INFO - PHASE 1B: EXTRACTION FROM MICROSOFT ACCESS
+2025-12-19 23:38:36,772 - INFO - ==================================================
+2025-12-19 23:38:36,984 - INFO - ✓ Connected to Access Northwind 2012 database: C:\Users\noufe\Downloads\Northwind 2012.accdb
+2025-12-19 23:38:36,999 - INFO -   Access - Extracted 29 rows from Customers
+2025-12-19 23:38:37,017 - INFO -   Access - Extracted 45 rows from Products
+2025-12-19 23:38:37,022 - INFO -   Access - Extracted 9 rows from Employees
+2025-12-19 23:38:37,028 - INFO -   Access - Extracted 48 rows from Orders
+2025-12-19 23:38:37,031 - INFO -   Access - Extracted 58 rows from Order Details
+2025-12-19 23:38:37,031 - WARNING -   Access - No mapping for Categories, skipping
+2025-12-19 23:38:37,036 - INFO -   Access - Extracted 10 rows from Suppliers
+2025-12-19 23:38:37,040 - INFO -   Access - Extracted 3 rows from Shippers
+2025-12-19 23:38:37,040 - WARNING -   Access - No mapping for Territories, skipping
+2025-12-19 23:38:37,041 - WARNING -   Access - No mapping for Region, skipping
+2025-12-19 23:38:37,380 - INFO - Access connection closed
+2025-12-19 23:38:37,380 - INFO - 
+==================================================
+2025-12-19 23:38:37,381 - INFO - PHASE 2: TRANSFORM & MERGE (Dual Sources)
+2025-12-19 23:38:37,381 - INFO - ==================================================
+2025-12-19 23:38:37,381 - INFO - 
+Source Statistics Before Merge:
+2025-12-19 23:38:37,381 - INFO -   SQL Server tables: 10
+2025-12-19 23:38:37,381 - INFO -   Access tables: 7
+2025-12-19 23:38:37,381 - INFO - 
+Merging Customers...
+2025-12-19 23:38:37,383 - INFO -   Customers: SQL Server=91 | Access unique=29 | Common keys=0 | Total=120
+2025-12-19 23:38:37,383 - INFO - 
+Merging Products (SQL Server pricing takes precedence)...
+2025-12-19 23:38:37,386 - INFO -   Average price difference: $0.00 (SQL Server prices used)
+2025-12-19 23:38:37,387 - INFO -   Products: SQL Server=77 | Access unique=19 | Common keys=26 | Total=96
+2025-12-19 23:38:37,388 - INFO - 
+Merging Employees...
+2025-12-19 23:38:37,390 - INFO -   Employees: SQL Server=9 | Access unique=0 | Common keys=9 | Total=9
+2025-12-19 23:38:37,390 - INFO - 
+Merging Orders (deduplicating transactions)...
+2025-12-19 23:38:37,393 - INFO -   Orders: SQL Server=830 | Access unique=48 | Common keys=0 | Total=878
+2025-12-19 23:38:37,393 - INFO - 
+Merging Order Details (split by OrderID to match Orders)...
+2025-12-19 23:38:37,397 - INFO -   Order Details: SQL Server=2155 (97%) | Access=58 (2%) | Merged=2213
+2025-12-19 23:38:37,397 - INFO - 
+Merging Categories...
+2025-12-19 23:38:37,397 - INFO -   Categories: Only SQL Server data available (8 rows)
+2025-12-19 23:38:37,398 - INFO - 
+Merging Suppliers...
+2025-12-19 23:38:37,399 - INFO -   Suppliers: SQL Server=29 | Access unique=0 | Common keys=10 | Total=29
+2025-12-19 23:38:37,400 - INFO - 
+Merging Shippers...
+2025-12-19 23:38:37,401 - INFO -   Shippers: SQL Server=3 | Access unique=0 | Common keys=3 | Total=3
+2025-12-19 23:38:37,401 - INFO - 
+--------------------------------------------------
+2025-12-19 23:38:37,401 - INFO - Creating Star Schema (Data Warehouse Model)
+2025-12-19 23:38:37,401 - INFO - --------------------------------------------------
+2025-12-19 23:38:37,402 - INFO - 
+Creating Dim_Time...
+2025-12-19 23:38:37,411 - INFO -   ✓ Dim_Time: 536 unique dates
+2025-12-19 23:38:37,411 - INFO - 
+Creating Dim_Customers...
+2025-12-19 23:38:37,413 - INFO -   ✓ Dim_Customers: 120 customers
+2025-12-19 23:38:37,413 - INFO - 
+Creating Dim_Products...
+2025-12-19 23:38:37,415 - INFO -   ✓ Dim_Products: 96 products
+2025-12-19 23:38:37,415 - INFO - 
+Creating Dim_Employees...
+2025-12-19 23:38:37,417 - INFO -   ✓ Dim_Employees: 9 employees
+2025-12-19 23:38:37,417 - INFO - 
+Creating Fact_Sales...
+2025-12-19 23:38:37,430 - INFO -   ✓ Fact_Sales: 2213 transaction rows
+2025-12-19 23:38:37,431 - INFO -     Total Sales: $1,333,929.86
+2025-12-19 23:38:37,432 - INFO -     Average Order Value: $1,533.25
+2025-12-19 23:38:37,432 - INFO - 
+✓ Transform and merge completed
+2025-12-19 23:38:37,432 - INFO - 
+==================================================
+2025-12-19 23:38:37,432 - INFO - PHASE 3A: LOAD TO CSV FILES
+2025-12-19 23:38:37,432 - INFO - ==================================================
+2025-12-19 23:38:37,437 - INFO -   ✓ Saved Dim_Time.csv (536 rows)
+2025-12-19 23:38:37,439 - INFO -   ✓ Saved Dim_Customers.csv (120 rows)
+2025-12-19 23:38:37,441 - INFO -   ✓ Saved Dim_Products.csv (96 rows)
+2025-12-19 23:38:37,453 - INFO -   ✓ Saved Dim_Employees.csv (9 rows)
+2025-12-19 23:38:37,477 - INFO -   ✓ Saved Fact_Sales.csv (2213 rows)
+2025-12-19 23:38:37,477 - INFO - 
+Creating analysis views for dashboard...
+2025-12-19 23:38:37,484 - INFO -   ✓ Sales_By_Month.csv
+2025-12-19 23:38:37,489 - INFO -   ✓ Sales_By_Category.csv
+2025-12-19 23:38:37,493 - INFO -   ✓ Sales_By_Country.csv
+2025-12-19 23:38:37,497 - INFO -   ✓ Top_Products.csv
+2025-12-19 23:38:37,501 - INFO -   ✓ High_Freight_Orders.csv (13 orders)
+2025-12-19 23:38:37,504 - INFO -   ✓ Late_Deliveries.csv (37 orders)
+2025-12-19 23:38:37,504 - INFO - 
+==================================================
+2025-12-19 23:38:37,505 - INFO - PHASE 3B: LOAD TO DATA WAREHOUSE (SQLite)
+2025-12-19 23:38:37,505 - INFO - ==================================================
+2025-12-19 23:38:37,516 - INFO -   ✓ Loaded Dim_Time to DWH (536 rows)
+2025-12-19 23:38:37,523 - INFO -   ✓ Loaded Dim_Customers to DWH (120 rows)
+2025-12-19 23:38:37,532 - INFO -   ✓ Loaded Dim_Products to DWH (96 rows)
+2025-12-19 23:38:37,539 - INFO -   ✓ Loaded Dim_Employees to DWH (9 rows)
+2025-12-19 23:38:37,564 - INFO -   ✓ Loaded Fact_Sales to DWH (2213 rows)
+2025-12-19 23:38:37,564 - INFO - 
+✓ Data Warehouse saved: c:\Users\noufe\Desktop\BI Project\data\DWH_Northwind.db
+2025-12-19 23:38:37,564 - INFO - 
+======================================================================
+2025-12-19 23:38:37,565 - INFO - ETL COMPLETED SUCCESSFULLY
+2025-12-19 23:38:37,565 - INFO - ======================================================================
+2025-12-19 23:38:37,565 - INFO - Duration: 0:00:01.108448
+2025-12-19 23:38:37,565 - INFO - 
+--------------------------------------------------
+2025-12-19 23:38:37,565 - INFO - ETL SUMMARY
+2025-12-19 23:38:37,565 - INFO - --------------------------------------------------
+2025-12-19 23:38:37,565 - INFO - 
+📥 DATA SOURCES:
+2025-12-19 23:38:37,565 - INFO -   Source 1 (SQL Server): Connected
+2025-12-19 23:38:37,566 - INFO -     Tables extracted: ['Customers', 'Products', 'Employees', 'Orders', 'Order Details', 'Categories', 'Suppliers', 'Shippers', 'Territories', 'Region']
+2025-12-19 23:38:37,566 - INFO -   Source 2 (Access): Connected
+2025-12-19 23:38:37,566 - INFO -     Tables extracted: ['Customers', 'Products', 'Employees', 'Orders', 'Order Details', 'Suppliers', 'Shippers']
+2025-12-19 23:38:37,566 - INFO - 
+🔄 MERGED DATA:
+2025-12-19 23:38:37,566 - INFO -   Customers: 120 rows
+2025-12-19 23:38:37,566 - INFO -   Products: 96 rows
+2025-12-19 23:38:37,566 - INFO -   Employees: 9 rows
+2025-12-19 23:38:37,566 - INFO -   Orders: 878 rows
+2025-12-19 23:38:37,567 - INFO -   Order Details: 2213 rows
+2025-12-19 23:38:37,567 - INFO -   Categories: 8 rows
+2025-12-19 23:38:37,567 - INFO -   Suppliers: 29 rows
+2025-12-19 23:38:37,567 - INFO -   Shippers: 3 rows
+2025-12-19 23:38:37,567 - INFO - 
+⭐ STAR SCHEMA (Data Warehouse):
+2025-12-19 23:38:37,567 - INFO -   Dim_Time: 536 dates
+2025-12-19 23:38:37,567 - INFO -   Dim_Customers: 120 customers
+2025-12-19 23:38:37,567 - INFO -   Dim_Products: 96 products
+2025-12-19 23:38:37,568 - INFO -   Dim_Employees: 9 employees
+2025-12-19 23:38:37,568 - INFO -   Fact_Sales: 2213 transactions
+2025-12-19 23:38:37,568 - INFO -     Total Revenue: $1,333,929.86
+2025-12-19 23:38:37,568 - INFO - 
+📁 OUTPUT LOCATION: c:\Users\noufe\Desktop\BI Project\data
+2025-12-19 23:38:37,568 - INFO - 🗄️ DWH DATABASE: c:\Users\noufe\Desktop\BI Project\data\DWH_Northwind.db
+2025-12-19 23:41:01,980 - INFO - ======================================================================
+2025-12-19 23:41:01,980 - INFO - NORTHWIND ETL - DUAL HETEROGENEOUS SOURCE EXTRACTION
+2025-12-19 23:41:01,980 - INFO - ======================================================================
+2025-12-19 23:41:01,980 - INFO - Sources: SQL Server Northwind + Microsoft Access Northwind
+2025-12-19 23:41:01,980 - INFO - Output: Unified Star Schema Data Warehouse
+2025-12-19 23:41:01,981 - INFO - 
+ETL Started: 2025-12-19 23:41:01.981059
+2025-12-19 23:41:01,981 - INFO - 
+==================================================
+2025-12-19 23:41:01,981 - INFO - PHASE 1A: EXTRACTION FROM SQL SERVER
+2025-12-19 23:41:01,981 - INFO - ==================================================
+2025-12-19 23:41:02,028 - INFO - ✓ Connected to SQL Server Northwind database
+2025-12-19 23:41:02,223 - INFO -   SQL Server - Extracted 91 rows from Customers
+2025-12-19 23:41:02,226 - INFO -   SQL Server - Extracted 77 rows from Products
+2025-12-19 23:41:02,230 - INFO -   SQL Server - Extracted 9 rows from Employees
+2025-12-19 23:41:02,240 - INFO -   SQL Server - Extracted 830 rows from Orders
+2025-12-19 23:41:02,251 - INFO -   SQL Server - Extracted 2155 rows from Order Details
+2025-12-19 23:41:02,253 - INFO -   SQL Server - Extracted 8 rows from Categories
+2025-12-19 23:41:02,256 - INFO -   SQL Server - Extracted 29 rows from Suppliers
+2025-12-19 23:41:02,257 - INFO -   SQL Server - Extracted 3 rows from Shippers
+2025-12-19 23:41:02,259 - INFO -   SQL Server - Extracted 53 rows from Territories
+2025-12-19 23:41:02,261 - INFO -   SQL Server - Extracted 4 rows from Region
+2025-12-19 23:41:02,261 - INFO - SQL Server connection closed
+2025-12-19 23:41:02,261 - INFO - 
+==================================================
+2025-12-19 23:41:02,261 - INFO - PHASE 1B: EXTRACTION FROM MICROSOFT ACCESS
+2025-12-19 23:41:02,262 - INFO - ==================================================
+2025-12-19 23:41:02,474 - INFO - ✓ Connected to Access Northwind 2012 database: C:\Users\noufe\Downloads\Northwind 2012.accdb
+2025-12-19 23:41:02,489 - INFO -   Access - Extracted 29 rows from Customers
+2025-12-19 23:41:02,507 - INFO -   Access - Extracted 45 rows from Products
+2025-12-19 23:41:02,513 - INFO -   Access - Extracted 9 rows from Employees
+2025-12-19 23:41:02,519 - INFO -   Access - Extracted 48 rows from Orders
+2025-12-19 23:41:02,523 - INFO -   Access - Extracted 58 rows from Order Details
+2025-12-19 23:41:02,523 - WARNING -   Access - No mapping for Categories, skipping
+2025-12-19 23:41:02,529 - INFO -   Access - Extracted 10 rows from Suppliers
+2025-12-19 23:41:02,533 - INFO -   Access - Extracted 3 rows from Shippers
+2025-12-19 23:41:02,533 - WARNING -   Access - No mapping for Territories, skipping
+2025-12-19 23:41:02,533 - WARNING -   Access - No mapping for Region, skipping
+2025-12-19 23:41:03,042 - INFO - Access connection closed
+2025-12-19 23:41:03,042 - INFO - 
+==================================================
+2025-12-19 23:41:03,042 - INFO - PHASE 2: TRANSFORM & MERGE (Dual Sources)
+2025-12-19 23:41:03,043 - INFO - ==================================================
+2025-12-19 23:41:03,043 - INFO - 
+Source Statistics Before Merge:
+2025-12-19 23:41:03,043 - INFO -   SQL Server tables: 10
+2025-12-19 23:41:03,043 - INFO -   Access tables: 7
+2025-12-19 23:41:03,043 - INFO - 
+Merging Customers...
+2025-12-19 23:41:03,046 - INFO -   Customers: SQL Server=91 | Access unique=29 | Common keys=0 | Total=120
+2025-12-19 23:41:03,046 - INFO - 
+Merging Products (SQL Server pricing takes precedence)...
+2025-12-19 23:41:03,048 - INFO -   Average price difference: $0.00 (SQL Server prices used)
+2025-12-19 23:41:03,051 - INFO -   Products: SQL Server=77 | Access unique=19 | Common keys=26 | Total=96
+2025-12-19 23:41:03,051 - INFO - 
+Merging Employees...
+2025-12-19 23:41:03,053 - INFO -   Employees: SQL Server=9 | Access unique=0 | Common keys=9 | Total=9
+2025-12-19 23:41:03,054 - INFO - 
+Merging Orders (deduplicating transactions)...
+2025-12-19 23:41:03,057 - INFO -   Orders: SQL Server=830 | Access unique=48 | Common keys=0 | Total=878
+2025-12-19 23:41:03,057 - INFO - 
+Merging Order Details (split by OrderID to match Orders)...
+2025-12-19 23:41:03,062 - INFO -   Order Details: SQL Server=2155 (97%) | Access=58 (2%) | Merged=2213
+2025-12-19 23:41:03,062 - INFO - 
+Merging Categories...
+2025-12-19 23:41:03,063 - INFO -   Categories: Only SQL Server data available (8 rows)
+2025-12-19 23:41:03,063 - INFO - 
+Merging Suppliers...
+2025-12-19 23:41:03,065 - INFO -   Suppliers: SQL Server=29 | Access unique=0 | Common keys=10 | Total=29
+2025-12-19 23:41:03,066 - INFO - 
+Merging Shippers...
+2025-12-19 23:41:03,067 - INFO -   Shippers: SQL Server=3 | Access unique=0 | Common keys=3 | Total=3
+2025-12-19 23:41:03,067 - INFO - 
+--------------------------------------------------
+2025-12-19 23:41:03,068 - INFO - Creating Star Schema (Data Warehouse Model)
+2025-12-19 23:41:03,068 - INFO - --------------------------------------------------
+2025-12-19 23:41:03,068 - INFO - 
+Creating Dim_Time...
+2025-12-19 23:41:03,077 - INFO -   ✓ Dim_Time: 536 unique dates
+2025-12-19 23:41:03,078 - INFO - 
+Creating Dim_Customers...
+2025-12-19 23:41:03,079 - INFO -   ✓ Dim_Customers: 120 customers
+2025-12-19 23:41:03,079 - INFO - 
+Creating Dim_Products...
+2025-12-19 23:41:03,082 - INFO -   ✓ Dim_Products: 96 products
+2025-12-19 23:41:03,082 - INFO - 
+Creating Dim_Employees...
+2025-12-19 23:41:03,084 - INFO -   ✓ Dim_Employees: 9 employees
+2025-12-19 23:41:03,084 - INFO - 
+Creating Fact_Sales...
+2025-12-19 23:41:03,099 - INFO -   ✓ Fact_Sales: 2213 transaction rows
+2025-12-19 23:41:03,100 - INFO -     Total Sales: $1,333,929.86
+2025-12-19 23:41:03,100 - INFO -     Average Order Value: $1,533.25
+2025-12-19 23:41:03,100 - INFO - 
+✓ Transform and merge completed
+2025-12-19 23:41:03,100 - INFO - 
+==================================================
+2025-12-19 23:41:03,100 - INFO - PHASE 3A: LOAD TO CSV FILES
+2025-12-19 23:41:03,101 - INFO - ==================================================
+2025-12-19 23:41:03,106 - INFO -   ✓ Saved Dim_Time.csv (536 rows)
+2025-12-19 23:41:03,108 - INFO -   ✓ Saved Dim_Customers.csv (120 rows)
+2025-12-19 23:41:03,111 - INFO -   ✓ Saved Dim_Products.csv (96 rows)
+2025-12-19 23:41:03,126 - INFO -   ✓ Saved Dim_Employees.csv (9 rows)
+2025-12-19 23:41:03,153 - INFO -   ✓ Saved Fact_Sales.csv (2213 rows)
+2025-12-19 23:41:03,153 - INFO - 
+Creating analysis views for dashboard...
+2025-12-19 23:41:03,161 - INFO -   ✓ Sales_By_Month.csv
+2025-12-19 23:41:03,167 - INFO -   ✓ Sales_By_Category.csv
+2025-12-19 23:41:03,171 - INFO -   ✓ Sales_By_Country.csv
+2025-12-19 23:41:03,177 - INFO -   ✓ Top_Products.csv
+2025-12-19 23:41:03,180 - INFO -   ✓ High_Freight_Orders.csv (13 orders)
+2025-12-19 23:41:03,184 - INFO -   ✓ Late_Deliveries.csv (37 orders)
+2025-12-19 23:41:03,184 - INFO - 
+==================================================
+2025-12-19 23:41:03,184 - INFO - PHASE 3B: LOAD TO DATA WAREHOUSE (SQLite)
+2025-12-19 23:41:03,185 - INFO - ==================================================
+2025-12-19 23:41:03,197 - INFO -   ✓ Loaded Dim_Time to DWH (536 rows)
+2025-12-19 23:41:03,205 - INFO -   ✓ Loaded Dim_Customers to DWH (120 rows)
+2025-12-19 23:41:03,215 - INFO -   ✓ Loaded Dim_Products to DWH (96 rows)
+2025-12-19 23:41:03,223 - INFO -   ✓ Loaded Dim_Employees to DWH (9 rows)
+2025-12-19 23:41:03,251 - INFO -   ✓ Loaded Fact_Sales to DWH (2213 rows)
+2025-12-19 23:41:03,251 - INFO - 
+✓ Data Warehouse saved: c:\Users\noufe\Desktop\BI Project\data\DWH_Northwind.db
+2025-12-19 23:41:03,251 - INFO - 
+======================================================================
+2025-12-19 23:41:03,251 - INFO - ETL COMPLETED SUCCESSFULLY
+2025-12-19 23:41:03,252 - INFO - ======================================================================
+2025-12-19 23:41:03,252 - INFO - Duration: 0:00:01.270757
+2025-12-19 23:41:03,252 - INFO - 
+--------------------------------------------------
+2025-12-19 23:41:03,252 - INFO - ETL SUMMARY
+2025-12-19 23:41:03,252 - INFO - --------------------------------------------------
+2025-12-19 23:41:03,252 - INFO - 
+📥 DATA SOURCES:
+2025-12-19 23:41:03,252 - INFO -   Source 1 (SQL Server): Connected
+2025-12-19 23:41:03,252 - INFO -     Tables extracted: ['Customers', 'Products', 'Employees', 'Orders', 'Order Details', 'Categories', 'Suppliers', 'Shippers', 'Territories', 'Region']
+2025-12-19 23:41:03,253 - INFO -   Source 2 (Access): Connected
+2025-12-19 23:41:03,253 - INFO -     Tables extracted: ['Customers', 'Products', 'Employees', 'Orders', 'Order Details', 'Suppliers', 'Shippers']
+2025-12-19 23:41:03,253 - INFO - 
+🔄 MERGED DATA:
+2025-12-19 23:41:03,253 - INFO -   Customers: 120 rows
+2025-12-19 23:41:03,253 - INFO -   Products: 96 rows
+2025-12-19 23:41:03,253 - INFO -   Employees: 9 rows
+2025-12-19 23:41:03,253 - INFO -   Orders: 878 rows
+2025-12-19 23:41:03,253 - INFO -   Order Details: 2213 rows
+2025-12-19 23:41:03,254 - INFO -   Categories: 8 rows
+2025-12-19 23:41:03,254 - INFO -   Suppliers: 29 rows
+2025-12-19 23:41:03,254 - INFO -   Shippers: 3 rows
+2025-12-19 23:41:03,254 - INFO - 
+⭐ STAR SCHEMA (Data Warehouse):
+2025-12-19 23:41:03,254 - INFO -   Dim_Time: 536 dates
+2025-12-19 23:41:03,254 - INFO -   Dim_Customers: 120 customers
+2025-12-19 23:41:03,254 - INFO -   Dim_Products: 96 products
+2025-12-19 23:41:03,255 - INFO -   Dim_Employees: 9 employees
+2025-12-19 23:41:03,255 - INFO -   Fact_Sales: 2213 transactions
+2025-12-19 23:41:03,255 - INFO -     Total Revenue: $1,333,929.86
+2025-12-19 23:41:03,255 - INFO - 
+📁 OUTPUT LOCATION: c:\Users\noufe\Desktop\BI Project\data
+2025-12-19 23:41:03,255 - INFO - 🗄️ DWH DATABASE: c:\Users\noufe\Desktop\BI Project\data\DWH_Northwind.db
+2025-12-19 23:45:53,380 - INFO - ======================================================================
+2025-12-19 23:45:53,380 - INFO - NORTHWIND ETL - DUAL HETEROGENEOUS SOURCE EXTRACTION
+2025-12-19 23:45:53,381 - INFO - ======================================================================
+2025-12-19 23:45:53,381 - INFO - Sources: SQL Server Northwind + Microsoft Access Northwind
+2025-12-19 23:45:53,381 - INFO - Output: Unified Star Schema Data Warehouse
+2025-12-19 23:45:53,381 - INFO - 
+ETL Started: 2025-12-19 23:45:53.381414
+2025-12-19 23:45:53,381 - INFO - 
+==================================================
+2025-12-19 23:45:53,381 - INFO - PHASE 1A: EXTRACTION FROM SQL SERVER
+2025-12-19 23:45:53,381 - INFO - ==================================================
+2025-12-19 23:45:53,428 - INFO - ✓ Connected to SQL Server Northwind database
+2025-12-19 23:45:53,624 - INFO -   SQL Server - Extracted 91 rows from Customers
+2025-12-19 23:45:53,627 - INFO -   SQL Server - Extracted 77 rows from Products
+2025-12-19 23:45:53,631 - INFO -   SQL Server - Extracted 9 rows from Employees
+2025-12-19 23:45:53,641 - INFO -   SQL Server - Extracted 830 rows from Orders
+2025-12-19 23:45:53,652 - INFO -   SQL Server - Extracted 2155 rows from Order Details
+2025-12-19 23:45:53,654 - INFO -   SQL Server - Extracted 8 rows from Categories
+2025-12-19 23:45:53,657 - INFO -   SQL Server - Extracted 29 rows from Suppliers
+2025-12-19 23:45:53,658 - INFO -   SQL Server - Extracted 3 rows from Shippers
+2025-12-19 23:45:53,661 - INFO -   SQL Server - Extracted 53 rows from Territories
+2025-12-19 23:45:53,663 - INFO -   SQL Server - Extracted 4 rows from Region
+2025-12-19 23:45:53,663 - INFO - SQL Server connection closed
+2025-12-19 23:45:53,663 - INFO - 
+==================================================
+2025-12-19 23:45:53,663 - INFO - PHASE 1B: EXTRACTION FROM MICROSOFT ACCESS
+2025-12-19 23:45:53,664 - INFO - ==================================================
+2025-12-19 23:45:53,918 - INFO - ✓ Connected to Access Northwind 2012 database: C:\Users\noufe\Downloads\Northwind 2012.accdb
+2025-12-19 23:45:53,933 - INFO -   Access - Extracted 29 rows from Customers
+2025-12-19 23:45:53,949 - INFO -   Access - Extracted 45 rows from Products
+2025-12-19 23:45:53,954 - INFO -   Access - Extracted 9 rows from Employees
+2025-12-19 23:45:53,960 - INFO -   Access - Extracted 48 rows from Orders
+2025-12-19 23:45:53,963 - INFO -   Access - Extracted 58 rows from Order Details
+2025-12-19 23:45:53,963 - WARNING -   Access - No mapping for Categories, skipping
+2025-12-19 23:45:53,969 - INFO -   Access - Extracted 10 rows from Suppliers
+2025-12-19 23:45:53,973 - INFO -   Access - Extracted 3 rows from Shippers
+2025-12-19 23:45:53,973 - WARNING -   Access - No mapping for Territories, skipping
+2025-12-19 23:45:53,973 - WARNING -   Access - No mapping for Region, skipping
+2025-12-19 23:45:54,327 - INFO - Access connection closed
+2025-12-19 23:45:54,327 - INFO - 
+==================================================
+2025-12-19 23:45:54,327 - INFO - PHASE 2: TRANSFORM & MERGE (Dual Sources)
+2025-12-19 23:45:54,327 - INFO - ==================================================
+2025-12-19 23:45:54,327 - INFO - 
+Source Statistics Before Merge:
+2025-12-19 23:45:54,328 - INFO -   SQL Server tables: 10
+2025-12-19 23:45:54,328 - INFO -   Access tables: 7
+2025-12-19 23:45:54,328 - INFO - 
+Merging Customers...
+2025-12-19 23:45:54,331 - INFO -   Customers: SQL Server=91 | Access unique=29 | Common keys=0 | Total=120
+2025-12-19 23:45:54,331 - INFO - 
+Merging Products (SQL Server pricing takes precedence)...
+2025-12-19 23:45:54,333 - INFO -   Average price difference: $0.00 (SQL Server prices used)
+2025-12-19 23:45:54,336 - INFO -   Products: SQL Server=77 | Access unique=19 | Common keys=26 | Total=96
+2025-12-19 23:45:54,336 - INFO - 
+Merging Employees...
+2025-12-19 23:45:54,338 - INFO -   Employees: SQL Server=9 | Access unique=0 | Common keys=9 | Total=9
+2025-12-19 23:45:54,339 - INFO - 
+Merging Orders (deduplicating transactions)...
+2025-12-19 23:45:54,342 - INFO -   Orders: SQL Server=830 | Access unique=48 | Common keys=0 | Total=878
+2025-12-19 23:45:54,342 - INFO - 
+Merging Order Details (split by OrderID to match Orders)...
+2025-12-19 23:45:54,346 - INFO -   Order Details: SQL Server=2155 (97%) | Access=58 (2%) | Merged=2213
+2025-12-19 23:45:54,346 - INFO - 
+Merging Categories...
+2025-12-19 23:45:54,347 - INFO -   Categories: Only SQL Server data available (8 rows)
+2025-12-19 23:45:54,347 - INFO - 
+Merging Suppliers...
+2025-12-19 23:45:54,350 - INFO -   Suppliers: SQL Server=29 | Access unique=0 | Common keys=10 | Total=29
+2025-12-19 23:45:54,350 - INFO - 
+Merging Shippers...
+2025-12-19 23:45:54,352 - INFO -   Shippers: SQL Server=3 | Access unique=0 | Common keys=3 | Total=3
+2025-12-19 23:45:54,352 - INFO - 
+--------------------------------------------------
+2025-12-19 23:45:54,352 - INFO - Creating Star Schema (Data Warehouse Model)
+2025-12-19 23:45:54,352 - INFO - --------------------------------------------------
+2025-12-19 23:45:54,352 - INFO - 
+Creating Dim_Time...
+2025-12-19 23:45:54,362 - INFO -   ✓ Dim_Time: 536 unique dates
+2025-12-19 23:45:54,363 - INFO - 
+Creating Dim_Customers...
+2025-12-19 23:45:54,364 - INFO -   ✓ Dim_Customers: 120 customers
+2025-12-19 23:45:54,364 - INFO - 
+Creating Dim_Products...
+2025-12-19 23:45:54,368 - INFO -   ✓ Dim_Products: 96 products
+2025-12-19 23:45:54,368 - INFO - 
+Creating Dim_Employees...
+2025-12-19 23:45:54,369 - INFO -   ✓ Dim_Employees: 9 employees
+2025-12-19 23:45:54,369 - INFO - 
+Creating Fact_Sales...
+2025-12-19 23:45:54,385 - INFO -   ✓ Fact_Sales: 2213 transaction rows
+2025-12-19 23:45:54,386 - INFO -     Total Sales: $1,333,929.86
+2025-12-19 23:45:54,386 - INFO -     Average Order Value: $1,533.25
+2025-12-19 23:45:54,387 - INFO - 
+✓ Transform and merge completed
+2025-12-19 23:45:54,387 - INFO - 
+==================================================
+2025-12-19 23:45:54,387 - INFO - PHASE 3A: LOAD TO CSV FILES
+2025-12-19 23:45:54,387 - INFO - ==================================================
+2025-12-19 23:45:54,392 - INFO -   ✓ Saved Dim_Time.csv (536 rows)
+2025-12-19 23:45:54,394 - INFO -   ✓ Saved Dim_Customers.csv (120 rows)
+2025-12-19 23:45:54,396 - INFO -   ✓ Saved Dim_Products.csv (96 rows)
+2025-12-19 23:45:54,409 - INFO -   ✓ Saved Dim_Employees.csv (9 rows)
+2025-12-19 23:45:54,439 - INFO -   ✓ Saved Fact_Sales.csv (2213 rows)
+2025-12-19 23:45:54,440 - INFO - 
+Creating analysis views for dashboard...
+2025-12-19 23:45:54,449 - INFO -   ✓ Sales_By_Month.csv
+2025-12-19 23:45:54,456 - INFO -   ✓ Sales_By_Category.csv
+2025-12-19 23:45:54,460 - INFO -   ✓ Sales_By_Country.csv
+2025-12-19 23:45:54,465 - INFO -   ✓ Top_Products.csv
+2025-12-19 23:45:54,469 - INFO -   ✓ High_Freight_Orders.csv (13 orders)
+2025-12-19 23:45:54,472 - INFO -   ✓ Late_Deliveries.csv (37 orders)
+2025-12-19 23:45:54,473 - INFO - 
+==================================================
+2025-12-19 23:45:54,473 - INFO - PHASE 3B: LOAD TO DATA WAREHOUSE (SQLite)
+2025-12-19 23:45:54,473 - INFO - ==================================================
+2025-12-19 23:45:54,485 - INFO -   ✓ Loaded Dim_Time to DWH (536 rows)
+2025-12-19 23:45:54,493 - INFO -   ✓ Loaded Dim_Customers to DWH (120 rows)
+2025-12-19 23:45:54,501 - INFO -   ✓ Loaded Dim_Products to DWH (96 rows)
+2025-12-19 23:45:54,511 - INFO -   ✓ Loaded Dim_Employees to DWH (9 rows)
+2025-12-19 23:45:54,538 - INFO -   ✓ Loaded Fact_Sales to DWH (2213 rows)
+2025-12-19 23:45:54,539 - INFO - 
+✓ Data Warehouse saved: c:\Users\noufe\Desktop\BI Project\data\DWH_Northwind.db
+2025-12-19 23:45:54,539 - INFO - 
+======================================================================
+2025-12-19 23:45:54,539 - INFO - ETL COMPLETED SUCCESSFULLY
+2025-12-19 23:45:54,539 - INFO - ======================================================================
+2025-12-19 23:45:54,539 - INFO - Duration: 0:00:01.157811
+2025-12-19 23:45:54,539 - INFO - 
+--------------------------------------------------
+2025-12-19 23:45:54,540 - INFO - ETL SUMMARY
+2025-12-19 23:45:54,540 - INFO - --------------------------------------------------
+2025-12-19 23:45:54,540 - INFO - 
+📥 DATA SOURCES:
+2025-12-19 23:45:54,540 - INFO -   Source 1 (SQL Server): Connected
+2025-12-19 23:45:54,540 - INFO -     Tables extracted: ['Customers', 'Products', 'Employees', 'Orders', 'Order Details', 'Categories', 'Suppliers', 'Shippers', 'Territories', 'Region']
+2025-12-19 23:45:54,540 - INFO -   Source 2 (Access): Connected
+2025-12-19 23:45:54,540 - INFO -     Tables extracted: ['Customers', 'Products', 'Employees', 'Orders', 'Order Details', 'Suppliers', 'Shippers']
+2025-12-19 23:45:54,540 - INFO - 
+🔄 MERGED DATA:
+2025-12-19 23:45:54,540 - INFO -   Customers: 120 rows
+2025-12-19 23:45:54,541 - INFO -   Products: 96 rows
+2025-12-19 23:45:54,541 - INFO -   Employees: 9 rows
+2025-12-19 23:45:54,541 - INFO -   Orders: 878 rows
+2025-12-19 23:45:54,541 - INFO -   Order Details: 2213 rows
+2025-12-19 23:45:54,541 - INFO -   Categories: 8 rows
+2025-12-19 23:45:54,541 - INFO -   Suppliers: 29 rows
+2025-12-19 23:45:54,541 - INFO -   Shippers: 3 rows
+2025-12-19 23:45:54,541 - INFO - 
+⭐ STAR SCHEMA (Data Warehouse):
+2025-12-19 23:45:54,542 - INFO -   Dim_Time: 536 dates
+2025-12-19 23:45:54,542 - INFO -   Dim_Customers: 120 customers
+2025-12-19 23:45:54,542 - INFO -   Dim_Products: 96 products
+2025-12-19 23:45:54,542 - INFO -   Dim_Employees: 9 employees
+2025-12-19 23:45:54,542 - INFO -   Fact_Sales: 2213 transactions
+2025-12-19 23:45:54,542 - INFO -     Total Revenue: $1,333,929.86
+2025-12-19 23:45:54,543 - INFO - 
+📁 OUTPUT LOCATION: c:\Users\noufe\Desktop\BI Project\data
+2025-12-19 23:45:54,543 - INFO - 🗄️ DWH DATABASE: c:\Users\noufe\Desktop\BI Project\data\DWH_Northwind.db
